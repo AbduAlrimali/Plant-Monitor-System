@@ -1,10 +1,7 @@
 #include <init.h>
 #include <handler_setup.h>
-#include "freertos/queue.h"
 
 QueueHandle_t xEventQueue;
-void send_data();
-void activate_pumb();
 
 bool sendSystemEvent(SystemEvent_t event) {
     BaseType_t xStatus = xQueueSendToBack(xEventQueue, &event, (TickType_t) 10); 

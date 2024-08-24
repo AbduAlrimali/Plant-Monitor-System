@@ -18,4 +18,7 @@ extern int DHTPin;
 extern int relayPin;  // The ESP32 pin GPIO13 that connects to the relay to control the pump
 extern int powerPin;  // The ESP32 pin GPIO32 that provides the power to the water sensor
 
+void send_data();
+void activate_pumb();
+
 #endif
