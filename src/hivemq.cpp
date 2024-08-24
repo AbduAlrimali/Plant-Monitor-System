@@ -2,13 +2,16 @@
 #include <PubSubClient.h>
 #include <WiFiClientSecure.h>
 #include <Wire.h>
+#include<Arduino.h>
+#include <init.h>
+#include <handler_setup.h>
 
 //---- HiveMQ Cloud Broker settings
-const char* mqtt_server = "265546a0ac3d4a9f953424fc8325f520.s1.eu.hivemq.cloud";
-const char* mqtt_username = "samyadel604@gmail.com";
-const char* mqtt_password = "SamyAdel359";
-const char* topic_publish = "sensor/data";
-const char* topic_status = "sensor/event";
+const char *mqtt_server = "265546a0ac3d4a9f953424fc8325f520.s1.eu.hivemq.cloud";
+const char *mqtt_username = "samyadel604@gmail.com";
+const char *mqtt_password = "SamyAdel359";
+const char *topic_publish = "sensor/data";
+const char *topic_event = "sensor/event";
 const int mqtt_port = 8883;
 
 WiFiClientSecure espClient;
@@ -53,30 +56,39 @@ unsigned long lastMsg = 0;
 char msg[MSG_BUFFER_SIZE];
 int value = 0;
 
-
-void callback(char* topic, byte* payload, unsigned int length) {
+void callback(char *topic, byte *payload, unsigned int length)
+{
     Serial.print("Message arrived [");
     Serial.print(topic);
     Serial.print("] ");
+    String msg = "";
     for (int i = 0; i < length; i++) {
-        Serial.print((char)payload[i]);
+        msg += (char)payload[i];
     }
-    Serial.println();
+    if (topic == topic_event)
+    {
+        if(msg == "on") {
+            sendSystemEvent(EVENT_MANUAL_PUMB);
+        }
+    }
 }
 
-void reconnect() {
+void reconnect()
+{
     // Loop until we’re reconnected
-    while (!client.connected()) {
+    while (!client.connected())
+    {
         Serial.print("Attempting MQTT connection… ");
         String clientId = "PlantIOT";
         // Attempt to connect
-        if (client.connect(clientId.c_str(), mqtt_username, mqtt_password)) {
+        if (client.connect(clientId.c_str(), mqtt_username, mqtt_password))
+        {
             Serial.println("connected!");
-            // Once connected, publish an announcement...
-            client.publish(topic_status, "connected");
             // ... and resubscribe
             client.subscribe(topic_publish);
-        } else {
+        }
+        else
+        {
             Serial.print("failed, rc = ");
             Serial.print(client.state());
             Serial.println(" try again in 5 seconds");
@@ -86,7 +98,8 @@ void reconnect() {
     }
 }
 
-void hivemq_setup() {
+void hivemq_setup()
+{
     delay(500);
     start_wifi();
     espClient.setCACert(root_ca);
@@ -94,12 +107,15 @@ void hivemq_setup() {
     client.setCallback(callback);
 }
 
-void send_hive(const char* obj) { 
-    if (!client.connected()) {
+void send_hive(const char *obj)
+{
+    if (!client.connected())
+    {
         reconnect();
     }
     client.loop();
-    if(client.publish(topic_publish, obj)){
+    if (client.publish(topic_publish, obj))
+    {
         Serial.println("Messege sent successfully.");
-    } 
+    }
 }
