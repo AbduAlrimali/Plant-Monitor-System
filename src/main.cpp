@@ -85,8 +85,8 @@ void setup() {
   pinMode(DHTPin, INPUT);
   hivemq_setup();
   
-  xTaskCreate(&sensor_reading, "ReadingSesnors", 1024, NULL, 1, NULL);
-  xTaskCreate(&eventHandlerTask, "EventHandler", 1024, NULL, 2, NULL); // Adjust stack size and priority as needed
+  xTaskCreate(&sensor_reading, "ReadingSesnors", 8192, NULL, 1, NULL);
+  xTaskCreate(&eventHandlerTask, "EventHandler", 8192, NULL, 2, NULL); // Adjust stack size and priority as needed
   xEventQueue = xQueueCreate(10, sizeof(SystemEvent_t));  // Adjust queue size as needed
 }
 
