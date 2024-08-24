@@ -2,7 +2,6 @@
 #include <PubSubClient.h>
 #include <WiFiClientSecure.h>
 #include <Wire.h>
-#include<Arduino.h>
 #include <init.h>
 #include <handler_setup.h>
 
