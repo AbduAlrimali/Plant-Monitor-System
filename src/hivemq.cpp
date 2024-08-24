@@ -6,7 +6,7 @@
 //---- HiveMQ Cloud Broker settings
 const char* mqtt_server = "265546a0ac3d4a9f953424fc8325f520.s1.eu.hivemq.cloud";
 const char* mqtt_username = "samyadel604@gmail.com";
-const char* mqtt_password = "SamyAdele359";
+const char* mqtt_password = "SamyAdel359";
 const char* topic_publish = "sensor/data";
 const char* topic_status = "sensor/event";
 const int mqtt_port = 8883;
@@ -48,7 +48,6 @@ mRGunUHBcnWEvgJBQl9nJEiU0Zsnvgc/ubhPgXRR4Xq37Z0j4r7g1SgEEzwxA57d
 emyPxgcYxn/eR44/KJ4EBs+lVDR3veyJm+kXQ99b21/+jh5Xos1AnX5iItreGCc=
 -----END CERTIFICATE-----
 )EOF";
-
 unsigned long lastMsg = 0;
 #define MSG_BUFFER_SIZE (500)
 char msg[MSG_BUFFER_SIZE];
@@ -100,7 +99,6 @@ void send_hive(const char* obj) {
         reconnect();
     }
     client.loop();
-    // refactored
     if(client.publish(topic_publish, obj)){
         Serial.println("Messege sent successfully.");
     } 

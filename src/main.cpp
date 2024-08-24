@@ -11,12 +11,12 @@ int soilPin=4;
 int airPin=34;
 int lightPin=35;
 int trigPin = 5;    // Trigger
-int echoPin = 12;    // Echo
-int DHTPin = 18;
+int echoPin = 18;    // Echo
+int DHTPin = 15;
 DHT dht(DHTPin, DHTTYPE);
 
 void setup() {
-  Serial.begin(115200);//uart
+  Serial.begin(115200); //uart
   pinMode(soilPin, INPUT);
   pinMode(airPin, INPUT);
   pinMode(lightPin, INPUT);
@@ -27,8 +27,6 @@ void setup() {
 }
 
 void loop() {
-  delay(1000);//if (now - lastMsg > 1000) 
-   // modulized 
   // read data
   int soilData = analogRead(soilPin);
   int _moisture = 100 - ((soilData / 4095.00) * 100);// range []
@@ -43,7 +41,7 @@ void loop() {
   float distanceData = (duration * 0.034) / 2; // range []
   float humidity = dht.readHumidity();// range []        
   float temperature = dht.readTemperature();   // range []
-  // modulize this
+
   //convert to json
   JsonDocument doc;
   doc["tmp"] = temperature;
@@ -53,10 +51,12 @@ void loop() {
   doc["humidity"] = humidity;
   doc["soil moisture"] = _moisture;
 
+
   //convert json to c string
-  String output;//char output[256]
+  String output;
   serializeJson(doc, output);
   
   //send to hivemq
   send_hive(output.c_str());
+  delay(10000);
 }
