@@ -95,7 +95,7 @@ void hivemq_setup() {
     client.setCallback(callback);
 }
 
-void send_hive(char* obj) { 
+void send_hive(const char* obj) { 
     if (!client.connected()) {
         reconnect();
     }

@@ -54,9 +54,9 @@ void loop() {
   doc["soil moisture"] = _moisture;
 
   //convert json to c string
-  char* output;
+  String output;//char output[256]
   serializeJson(doc, output);
   
   //send to hivemq
-  send_hive(output);
+  send_hive(output.c_str());
 }
