@@ -44,7 +44,7 @@ void sensor_reading(void* pvParameters){
 
     sendSystemEvent(EVENT_DATA_READY_FOR_HIVE_MQ);
     if(_moisture < 50 || temperature>35){
-      sendSystemEvent(EVENT_DATA_READY_FOR_HIVE_MQ);
+      sendSystemEvent(EVENT_ACTIVATE_PUMB);
     }
     vTaskDelay(15000 / portTICK_PERIOD_MS);
   }
