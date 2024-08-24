@@ -1,7 +1,7 @@
 #include <init.h>
 #include <handler_setup.h>
 
-QueueHandle_t xEventQueue;
+QueueHandle_t xEventQueue = xQueueCreate (10, sizeof(unsigned int));
 
 bool sendSystemEvent(SystemEvent_t event) {
     BaseType_t xStatus = xQueueSendToBack(xEventQueue, &event, (TickType_t) 10); 
