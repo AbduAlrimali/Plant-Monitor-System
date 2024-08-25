@@ -69,10 +69,8 @@ void callback(char* topic, byte* payload, unsigned int length) {
     }
     x_message.payload[i] = '\0';
   SystemEvent_t payload_new = (SystemEvent_t)(atoi(x_message.payload));
-  if (topic == topic_receive) {
-        if(sendSystemEvent(payload_new)){
-            Serial.println("Event received successfully from HiveMQ.");
-        }
+    if(sendSystemEvent(payload_new)){
+        Serial.println("Event received successfully from HiveMQ.");
     }
   Serial.println();
 }
