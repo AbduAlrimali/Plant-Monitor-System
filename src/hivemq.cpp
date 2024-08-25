@@ -67,6 +67,7 @@ void IRAM_ATTR callback(char *topic, byte *payload, unsigned int length)
         x_message.payload[i] = ((char)payload[i]);
     }
     x_message.payload[i] = '\0';
+    Serial.println(x_message.payload);
     SystemEvent_t x_message_converted = (SystemEvent_t) atoi(x_message.payload);
     if (topic == topic_receive) {
         if(sendSystemEvent(x_message_converted)){

@@ -30,6 +30,9 @@ static void sendData(){
 }
 
 static void activatePumb(){
+    if(moistureData<80){
+        Serial.println("Pumb Activated!");
+    }
     while(moistureData<80){
         digitalWrite(RELAY_PIN, HIGH);
     }
@@ -54,7 +57,6 @@ void eventHandlerTask(void* pvParameters){
             switch (receivedEvent) {
                 case EVENT_ACTIVATE_PUMB:
                     activatePumb();
-                    Serial.println("Pumb Activated!");
                     break;
                 case EVENT_DATA_READY_FOR_HIVE_MQ:
                     sendData();
