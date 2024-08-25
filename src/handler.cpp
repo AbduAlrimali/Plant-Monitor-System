@@ -2,12 +2,15 @@
 #include<hivemq.h>
 #include "sensors.h"
 #include <ArduinoJson.h>
+#include <wifi_setup.h>
 
 QueueHandle_t xEventQueue;
 
 void handler_setup(){
     xTaskCreate(&sensor_reading, "ReadingSensors", 8192, NULL, 1, NULL);
     xTaskCreate(&eventHandlerTask, "EventHandler", 8192, NULL, 1, NULL); 
+    xTaskCreate(&keeping_connection, "MQTTKeeper", 8192, NULL, 1, NULL);
+    xTaskCreate(&wifiMonitoringTask, "WiFi Monitor", 4096, NULL, 1, NULL);
     xEventQueue = xQueueCreate(10, sizeof(SystemEvent_t));
     Serial.println("Handler is ready.");
 }
@@ -32,7 +35,7 @@ static void sendData(){
 static void activatePumb(){
     if(moistureData<80){
         Serial.println("Pumb Activated!");
-    }
+    } else return;
     while(moistureData<80){
         digitalWrite(RELAY_PIN, HIGH);
     }
@@ -43,10 +46,10 @@ static void activatePumb(){
 bool sendSystemEvent(SystemEvent_t event) {
     BaseType_t xStatus = xQueueSendToBack(xEventQueue, &event, (TickType_t) 10); 
     if (xStatus != pdPASS) {
-        vTaskDelay(pdMS_TO_TICKS(1000));
+        vTaskDelay(pdMS_TO_TICKS(500));
         return false;
     }
-    vTaskDelay(pdMS_TO_TICKS(1000));
+    vTaskDelay(pdMS_TO_TICKS(500));
     return true;
 }
 
@@ -60,6 +63,12 @@ void eventHandlerTask(void* pvParameters){
                     break;
                 case EVENT_DATA_READY_FOR_HIVE_MQ:
                     sendData();
+                    break;
+                case EVENT_WIFI_CONNECTED:
+                    Serial.println("WiFi connected.");
+                    break;
+                case EVENT_WIFI_DISCONNECTED:
+                    Serial.println("WiFi disconnected.");
                     break;
                 default:
                     Serial.println("Unusual event occured!");

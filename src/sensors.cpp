@@ -1,7 +1,5 @@
 #include "sensors.h"
-
-// Global sensor object
-DHT dht(DHT_PIN, DHT11);
+#include <DHT.h> 
 
 int moistureData;
 int gasData;
@@ -9,6 +7,8 @@ int lightData;
 float distanceData;
 float humidityData;
 float temperatureData;
+
+DHT dht(DHT_PIN, DHT11);
 
 float readTemperature() {
     return dht.readTemperature(); 

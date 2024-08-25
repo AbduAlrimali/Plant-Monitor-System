@@ -56,14 +56,14 @@ struct stu_message
   String topic ;
 } x_message;
 
-void IRAM_ATTR callback(char *topic, byte *payload, unsigned int length)
+void callback(char *topic, byte *payload, unsigned int length)
 {
+    Serial.println("Message received from callback!");
     memset( x_message.payload, '\0', payloadSize ); // clear payload char buffer
     x_message.topic = ""; //clear topic string buffer
     x_message.topic = topic; //store new topic
     int i = 0; // extract payload
-    for ( i; i < length; i++)
-    {
+    for ( i; i < length; i++) {
         x_message.payload[i] = ((char)payload[i]);
     }
     x_message.payload[i] = '\0';
@@ -88,8 +88,8 @@ void reconnect()
         {
             Serial.println("connected!");
             // ... and resubscribe
-            client.subscribe(topic_publish);
-            client.subscribe(topic_receive);
+            client.subscribe(topic_publish, 2);
+            client.subscribe(topic_receive, 2);
         }
         else
         {
@@ -111,12 +111,17 @@ void hivemq_setup()
     Serial.println("Connected to HiveMQ successfully.");
 }
 
+void keeping_connection(void* pvParameters) {
+    while(1){
+        if (!client.connected()) {
+            reconnect();
+        }
+        client.loop();
+    }
+}
+
 void send_hive(const char *obj)
 {
-    if (!client.connected()) {
-        reconnect();
-    }
-    client.loop();
     if (client.publish(topic_publish, obj)) {
         Serial.println("Messege sent successfully.");
     }

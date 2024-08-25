@@ -12,7 +12,9 @@ static void activatePumb();
 extern QueueHandle_t xEventQueue;
 typedef enum {
     EVENT_ACTIVATE_PUMB=1,
-    EVENT_DATA_READY_FOR_HIVE_MQ=200
+    EVENT_DATA_READY_FOR_HIVE_MQ=200,
+    EVENT_WIFI_CONNECTED,
+    EVENT_WIFI_DISCONNECTED
 } SystemEvent_t;
 
 void handler_setup();

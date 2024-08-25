@@ -5,6 +5,7 @@
 
 using namespace std;
 
+
 void sensor_reading(void* pvParameters){
   while(1) {
     moistureData = readSoilMoisture();
@@ -32,7 +33,7 @@ void setup() {
   pinMode(TRIG_PIN, OUTPUT);
   pinMode(ECHO_PIN, INPUT);
   pinMode(DHT_PIN, INPUT);
-  
+
   start_wifi();
   hivemq_setup();
   handler_setup();
