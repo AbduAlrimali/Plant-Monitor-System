@@ -1,4 +1,3 @@
-#include <WiFi.h>
 #include <wifi_setup.h>
 
 #define WIFI_SSID "Tigers"

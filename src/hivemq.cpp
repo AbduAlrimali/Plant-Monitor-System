@@ -1,16 +1,14 @@
-#include <wifi_setup.h>
 #include <PubSubClient.h>
 #include <WiFiClientSecure.h>
 #include <Wire.h>
-#include <init.h>
-#include <handler_setup.h>
+#include <handler.h>
 
 //---- HiveMQ Cloud Broker settings
 const char *mqtt_server = "265546a0ac3d4a9f953424fc8325f520.s1.eu.hivemq.cloud";
 const char *mqtt_username = "samyadel604@gmail.com";
 const char *mqtt_password = "SamyAdel359";
 const char *topic_publish = "sensor/data";
-const char *topic_event = "sensor/event";
+const char *topic_receive = "sensor/event";
 const int mqtt_port = 8883;
 
 WiFiClientSecure espClient;
@@ -50,24 +48,29 @@ mRGunUHBcnWEvgJBQl9nJEiU0Zsnvgc/ubhPgXRR4Xq37Z0j4r7g1SgEEzwxA57d
 emyPxgcYxn/eR44/KJ4EBs+lVDR3veyJm+kXQ99b21/+jh5Xos1AnX5iItreGCc=
 -----END CERTIFICATE-----
 )EOF";
-unsigned long lastMsg = 0;
-#define MSG_BUFFER_SIZE (500)
-char msg[MSG_BUFFER_SIZE];
-int value = 0;
 
-void callback(char *topic, byte *payload, unsigned int length)
+const int payloadSize = 100;
+struct stu_message
 {
-    Serial.print("Message arrived [");
-    Serial.print(topic);
-    Serial.print("] ");
-    String msg = "";
-    for (int i = 0; i < length; i++) {
-        msg += (char)payload[i];
-    }
-    if (topic == topic_event)
+  char payload [payloadSize] = {'\0'};
+  String topic ;
+} x_message;
+
+void IRAM_ATTR callback(char *topic, byte *payload, unsigned int length)
+{
+    memset( x_message.payload, '\0', payloadSize ); // clear payload char buffer
+    x_message.topic = ""; //clear topic string buffer
+    x_message.topic = topic; //store new topic
+    int i = 0; // extract payload
+    for ( i; i < length; i++)
     {
-        if(msg == "on") {
-            sendSystemEvent(EVENT_MANUAL_PUMB);
+        x_message.payload[i] = ((char)payload[i]);
+    }
+    x_message.payload[i] = '\0';
+    SystemEvent_t x_message_converted = (SystemEvent_t) atoi(x_message.payload);
+    if (topic == topic_receive) {
+        if(sendSystemEvent(x_message_converted)){
+            Serial.println("Event received successfully from HiveMQ.");
         }
     }
 }
@@ -85,6 +88,7 @@ void reconnect()
             Serial.println("connected!");
             // ... and resubscribe
             client.subscribe(topic_publish);
+            client.subscribe(topic_receive);
         }
         else
         {
@@ -100,7 +104,6 @@ void reconnect()
 void hivemq_setup()
 {
     delay(500);
-    start_wifi();
     espClient.setCACert(root_ca);
     client.setServer(mqtt_server, mqtt_port);
     client.setCallback(callback);
@@ -108,13 +111,11 @@ void hivemq_setup()
 
 void send_hive(const char *obj)
 {
-    if (!client.connected())
-    {
+    if (!client.connected()) {
         reconnect();
     }
     client.loop();
-    if (client.publish(topic_publish, obj))
-    {
+    if (client.publish(topic_publish, obj)) {
         Serial.println("Messege sent successfully.");
     }
 }
