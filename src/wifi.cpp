@@ -5,6 +5,7 @@
 #define WIFI_PASSWORD "WKZ6Z8RLBZELB"
 
 void start_wifi() {
+    WiFi.mode(WIFI_STA);
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
     Serial.print("Connecting to Wi-Fi");
     while (WiFi.status() != WL_CONNECTED) {

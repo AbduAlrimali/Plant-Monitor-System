@@ -69,6 +69,7 @@ void eventHandlerTask(void* pvParameters){
                     break;
                 case EVENT_WIFI_DISCONNECTED:
                     Serial.println("WiFi disconnected.");
+                    start_wifi();
                     break;
                 default:
                     Serial.println("Unusual event occured!");

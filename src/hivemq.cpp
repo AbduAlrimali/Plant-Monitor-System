@@ -1,6 +1,5 @@
 #include <PubSubClient.h>
 #include <WiFiClientSecure.h>
-#include <Wire.h>
 #include <handler.h>
 
 //---- HiveMQ Cloud Broker settings
@@ -9,6 +8,7 @@ const char *mqtt_username = "samyadel604@gmail.com";
 const char *mqtt_password = "SamyAdel359";
 const char *topic_publish = "sensor/data";
 const char *topic_receive = "sensor/event";
+
 const int mqtt_port = 8883;
 
 WiFiClientSecure espClient;
@@ -49,6 +49,11 @@ emyPxgcYxn/eR44/KJ4EBs+lVDR3veyJm+kXQ99b21/+jh5Xos1AnX5iItreGCc=
 -----END CERTIFICATE-----
 )EOF";
 
+unsigned long lastMsg = 0;
+#define MSG_BUFFER_SIZE (500)
+char msg[MSG_BUFFER_SIZE];
+int value = 0;
+
 const int payloadSize = 100;
 struct stu_message
 {
@@ -56,50 +61,42 @@ struct stu_message
   String topic ;
 } x_message;
 
-void callback(char *topic, byte *payload, unsigned int length)
-{
-    Serial.println("Message received from callback!");
-    memset( x_message.payload, '\0', payloadSize ); // clear payload char buffer
-    x_message.topic = ""; //clear topic string buffer
-    x_message.topic = topic; //store new topic
-    int i = 0; // extract payload
+void callback(char* topic, byte* payload, unsigned int length) {
+    Serial.println("Callback is called!");
+  int i = 0; // extract payload
     for ( i; i < length; i++) {
         x_message.payload[i] = ((char)payload[i]);
     }
     x_message.payload[i] = '\0';
-    Serial.println(x_message.payload);
-    SystemEvent_t x_message_converted = (SystemEvent_t) atoi(x_message.payload);
-    if (topic == topic_receive) {
-        if(sendSystemEvent(x_message_converted)){
+  SystemEvent_t payload_new = (SystemEvent_t)(atoi(x_message.payload));
+  if (topic == topic_receive) {
+        if(sendSystemEvent(payload_new)){
             Serial.println("Event received successfully from HiveMQ.");
         }
     }
+  Serial.println();
 }
 
-void reconnect()
-{
-    // Loop until we’re reconnected
-    while (!client.connected())
-    {
-        Serial.print("Attempting MQTT connection… ");
-        String clientId = "PlantIOT";
-        // Attempt to connect
-        if (client.connect(clientId.c_str(), mqtt_username, mqtt_password))
-        {
-            Serial.println("connected!");
-            // ... and resubscribe
-            client.subscribe(topic_publish, 2);
-            client.subscribe(topic_receive, 2);
-        }
-        else
-        {
-            Serial.print("failed, rc = ");
-            Serial.print(client.state());
-            Serial.println(" try again in 5 seconds");
-            // Wait 5 seconds before retrying
-            delay(5000);
-        }
+void reconnect() {
+  // Loop until we’re reconnected
+  while (!client.connected()) {
+    Serial.print("Attempting MQTT connection… ");
+    String clientId = "ESP32Client";
+    // Attempt to connect
+    if (client.connect(clientId.c_str(), mqtt_username, mqtt_password)) {
+      Serial.println("connected!");
+      // Once connected, publish an announcement...
+      client.publish(topic_publish, "connected");
+      // ... and resubscribe
+      client.subscribe(topic_receive);
+    } else {
+      Serial.print("failed, rc = ");
+      Serial.print(client.state());
+      Serial.println(" try again in 5 seconds");
+      // Wait 5 seconds before retrying
+      delay(5000);
     }
+  }
 }
 
 void hivemq_setup()
