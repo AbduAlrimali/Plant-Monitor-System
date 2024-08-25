@@ -107,6 +107,7 @@ void hivemq_setup()
     espClient.setCACert(root_ca);
     client.setServer(mqtt_server, mqtt_port);
     client.setCallback(callback);
+    Serial.println("Connected to HiveMQ successfully.");
 }
 
 void send_hive(const char *obj)

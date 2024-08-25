@@ -7,8 +7,9 @@ QueueHandle_t xEventQueue;
 
 void handler_setup(){
     xTaskCreate(&sensor_reading, "ReadingSensors", 8192, NULL, 1, NULL);
-    xTaskCreate(&eventHandlerTask, "EventHandler", 8192, NULL, 2, NULL); 
+    xTaskCreate(&eventHandlerTask, "EventHandler", 8192, NULL, 1, NULL); 
     xEventQueue = xQueueCreate(10, sizeof(SystemEvent_t));
+    Serial.println("Handler is ready.");
 }
 
 static void sendData(){
@@ -39,8 +40,10 @@ static void activatePumb(){
 bool sendSystemEvent(SystemEvent_t event) {
     BaseType_t xStatus = xQueueSendToBack(xEventQueue, &event, (TickType_t) 10); 
     if (xStatus != pdPASS) {
+        vTaskDelay(pdMS_TO_TICKS(1000));
         return false;
     }
+    vTaskDelay(pdMS_TO_TICKS(1000));
     return true;
 }
 

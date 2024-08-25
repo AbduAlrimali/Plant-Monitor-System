@@ -13,6 +13,7 @@ void sensor_reading(void* pvParameters){
     distanceData = readDistance();
     humidityData = readHumidity();
     temperatureData = readTemperature();
+    Serial.println("Sensors read successfully.");
 
     sendSystemEvent(EVENT_DATA_READY_FOR_HIVE_MQ);
     if(moistureData < 20 || temperatureData>35) {
