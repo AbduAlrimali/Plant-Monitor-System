@@ -17,7 +17,7 @@ void start_wifi() {
     Serial.println(WiFi.localIP());
     Serial.println();
 }
-static bool wifiConnected = false;  // Add this variable (ideally as a static global in handler.cpp)
+static bool wifiConnected = false;  // wifi status to know the previous status
 
 void wifiMonitoringTask(void* pvParameters) {
   while (1) {

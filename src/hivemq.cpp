@@ -61,13 +61,14 @@ struct stu_message
   String topic ;
 } x_message;
 
-void callback(char* topic, byte* payload, unsigned int length) {
+void IRAM_ATTR callback(char* topic, byte* payload, unsigned int length) {
     Serial.println("Callback is called!");
   int i = 0; // extract payload
     for ( i; i < length; i++) {
         x_message.payload[i] = ((char)payload[i]);
     }
     x_message.payload[i] = '\0';
+    //convert the recieved message to system event datatype and send it to the queue
   SystemEvent_t payload_new = (SystemEvent_t)(atoi(x_message.payload));
     if(sendSystemEvent(payload_new)){
         Serial.println("Event received successfully from HiveMQ.");
@@ -99,6 +100,7 @@ void reconnect() {
 
 void hivemq_setup()
 {
+  //hivemq setup
     delay(500);
     espClient.setCACert(root_ca);
     client.setServer(mqtt_server, mqtt_port);
@@ -109,6 +111,7 @@ void hivemq_setup()
     Serial.println("Connected to HiveMQ successfully.");
 }
 
+//keeping the connection to publish and reveive
 void keeping_connection(void* pvParameters) {
     while(1){
         if (!client.connected()) {

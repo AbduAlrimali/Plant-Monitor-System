@@ -6,6 +6,8 @@
 
 using namespace std;
 
+
+//send the data to hivemq when ready
 void sendData(){
     JsonDocument doc;
     doc["tmp"] = temperatureData;
@@ -26,6 +28,7 @@ void sendData(){
 
 void sensor_reading(void* pvParameters){
   while(1) {
+    // reading sensors values
     moistureData = readSoilMoisture();
     gasData = readGas();
     lightData = readLightIntensity();
@@ -34,10 +37,13 @@ void sensor_reading(void* pvParameters){
     temperatureData = readTemperature();
     Serial.println("Sensors read successfully.");
 
+  //take action upon sensor readings
     if(moistureData < 20 || temperatureData>35) {
       sendSystemEvent(EVENT_ACTIVATE_PUMB);
     }
+    //send the data to hive
     sendData();
+    //wait 15 seconds for next readings
     vTaskDelay(15000 / portTICK_PERIOD_MS);
   }
 }
@@ -46,7 +52,7 @@ void sensor_reading(void* pvParameters){
 
 void setup() {
   Serial.begin(115200); //UART
-
+  // setup pins
   pinMode(SOIL_PIN, INPUT);
   pinMode(GAS_PIN, INPUT);
   pinMode(LIGHT_PIN, INPUT);
@@ -55,6 +61,7 @@ void setup() {
   pinMode(DHT_PIN, INPUT);
   pinMode(RELAY_PIN, OUTPUT);
 
+  //initialize the components
   start_wifi();
   hivemq_setup();
   handler_setup();

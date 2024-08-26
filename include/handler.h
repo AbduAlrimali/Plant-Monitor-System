@@ -9,7 +9,7 @@
 static void sendData();
 static void activatePumb();
 
-extern QueueHandle_t xEventQueue;
+// define events types
 typedef enum {
     EVENT_ACTIVATE_PUMB=1,
     EVENT_DATA_READY_FOR_HIVE_MQ=200,

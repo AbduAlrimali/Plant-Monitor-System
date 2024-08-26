@@ -10,30 +10,30 @@ float temperatureData;
 
 DHT dht(DHT_PIN, DHT11);
 
-float readTemperature() {
+float readTemperature() { //reading from DHT11
     return dht.readTemperature(); 
 }
 
-float readHumidity() {
+float readHumidity() { //reading from DHT11
     return dht.readHumidity();
 }
 
-int readSoilMoisture() {
+int readSoilMoisture() { //reading from soil moisture sensor
     int soilData = analogRead(SOIL_PIN);
     return 100 - ((soilData / 4095.00) * 100); 
 }
 
 int readGas() {
-    int gasData = analogRead(GAS_PIN);
+    int gasData = analogRead(GAS_PIN); //reading from gas sensor
     return 100 - ((gasData / 4095.00) * 100); 
 }
 
 int readLightIntensity() {
-    int lightData = analogRead(LIGHT_PIN);
+    int lightData = analogRead(LIGHT_PIN); // reading from light sensor
     return 100 - ((lightData / 4095.00) * 100); 
 }
 
-float readDistance() {
+float readDistance() { // calculating distance using the ultrasonic sensor
     digitalWrite(TRIG_PIN, LOW);
     delayMicroseconds(5);
     digitalWrite(TRIG_PIN, HIGH);
