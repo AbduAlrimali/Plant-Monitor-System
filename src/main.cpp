@@ -53,6 +53,7 @@ void setup() {
   pinMode(TRIG_PIN, OUTPUT);
   pinMode(ECHO_PIN, INPUT);
   pinMode(DHT_PIN, INPUT);
+  pinMode(RELAY_PIN, OUTPUT);
 
   start_wifi();
   hivemq_setup();
