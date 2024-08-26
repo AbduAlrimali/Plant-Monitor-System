@@ -24,11 +24,13 @@ int readSoilMoisture() {
 }
 
 int readGas() {
-    return analogRead(GAS_PIN);
+    int gasData = analogRead(GAS_PIN);
+    return 100 - ((gasData / 4095.00) * 100); 
 }
 
 int readLightIntensity() {
-    return analogRead(LIGHT_PIN);
+    int lightData = analogRead(LIGHT_PIN);
+    return 100 - ((lightData / 4095.00) * 100); 
 }
 
 float readDistance() {

@@ -5,6 +5,7 @@
 #include <wifi_setup.h>
 
 QueueHandle_t xEventQueue;
+const TickType_t xDelay = 15000 / portTICK_PERIOD_MS;
 
 void handler_setup(){
     xTaskCreate(&sensor_reading, "ReadingSensors", 8192, NULL, 1, NULL);
@@ -15,7 +16,7 @@ void handler_setup(){
     Serial.println("Handler is ready.");
 }
 
-static void sendData(){
+void sendData(){
     JsonDocument doc;
     doc["tmp"] = temperatureData;
     doc["distance"] = distanceData;
@@ -32,15 +33,12 @@ static void sendData(){
   send_hive(output.c_str());
 }
 
-static void activatePumb(){
-    if(moistureData<80){
-        Serial.println("Pumb Activated!");
-    } else return;
-    while(moistureData<80){
-        digitalWrite(RELAY_PIN, HIGH);
-    }
+void activatePumb(){
+    Serial.println("Pumb Activated");
+    digitalWrite(RELAY_PIN, HIGH);
+    vTaskDelay( xDelay );
     digitalWrite(RELAY_PIN, LOW);
-    Serial.println("Pumb Stopped!");
+    Serial.println("Pumb Deactivated");
 }
 
 bool sendSystemEvent(SystemEvent_t event) {
