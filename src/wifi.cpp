@@ -24,15 +24,14 @@ void wifiMonitoringTask(void* pvParameters) {
     if (WiFi.status() == WL_CONNECTED) {
       // WiFi is connected
       if (!wifiConnected) { // Check if we were previously disconnected
-        sendSystemEvent(EVENT_WIFI_CONNECTED);
         wifiConnected = true; 
       }
     } else {
       // WiFi is disconnected
       if (wifiConnected) { // Check if we were previously connected
-        sendSystemEvent(EVENT_WIFI_DISCONNECTED);
         wifiConnected = false;
       }
+      start_wifi();
     }
     vTaskDelay(2000 / portTICK_PERIOD_MS); // Check every 2 seconds
   }

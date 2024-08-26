@@ -1,7 +1,6 @@
 #include <handler.h>
 #include<hivemq.h>
 #include "sensors.h"
-#include <ArduinoJson.h>
 #include <wifi_setup.h>
 
 QueueHandle_t xEventQueue;
@@ -16,29 +15,13 @@ void handler_setup(){
     Serial.println("Handler is ready.");
 }
 
-void sendData(){
-    JsonDocument doc;
-    doc["tmp"] = temperatureData;
-    doc["distance"] = distanceData;
-    doc["air"] = gasData;
-    doc["light"] = lightData;
-    doc["humidity"] = humidityData;
-    doc["soil moisture"] = moistureData;
-
-  //convert json to c string
-  String output;
-  serializeJson(doc, output);
-  
-  //send to hivemq
-  send_hive(output.c_str());
-}
-
 void activatePumb(){
     Serial.println("Pumb Activated");
     digitalWrite(RELAY_PIN, HIGH);
     vTaskDelay( xDelay );
     digitalWrite(RELAY_PIN, LOW);
     Serial.println("Pumb Deactivated");
+
 }
 
 bool sendSystemEvent(SystemEvent_t event) {
@@ -58,16 +41,6 @@ void eventHandlerTask(void* pvParameters){
             switch (receivedEvent) {
                 case EVENT_ACTIVATE_PUMB:
                     activatePumb();
-                    break;
-                case EVENT_DATA_READY_FOR_HIVE_MQ:
-                    sendData();
-                    break;
-                case EVENT_WIFI_CONNECTED:
-                    Serial.println("WiFi connected.");
-                    break;
-                case EVENT_WIFI_DISCONNECTED:
-                    Serial.println("WiFi disconnected.");
-                    start_wifi();
                     break;
                 default:
                     Serial.println("Unusual event occured!");

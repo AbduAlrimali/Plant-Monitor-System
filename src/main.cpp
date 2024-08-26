@@ -2,8 +2,26 @@
 #include<hivemq.h>
 #include <handler.h>
 #include <sensors.h>
+#include <ArduinoJson.h>
 
 using namespace std;
+
+void sendData(){
+    JsonDocument doc;
+    doc["tmp"] = temperatureData;
+    doc["distance"] = distanceData;
+    doc["air"] = gasData;
+    doc["light"] = lightData;
+    doc["humidity"] = humidityData;
+    doc["soil moisture"] = moistureData;
+
+  //convert json to c string
+  String output;
+  serializeJson(doc, output);
+  
+  //send to hivemq
+  send_hive(output.c_str());
+}
 
 
 void sensor_reading(void* pvParameters){
@@ -16,13 +34,15 @@ void sensor_reading(void* pvParameters){
     temperatureData = readTemperature();
     Serial.println("Sensors read successfully.");
 
-    sendSystemEvent(EVENT_DATA_READY_FOR_HIVE_MQ);
     if(moistureData < 20 || temperatureData>35) {
       sendSystemEvent(EVENT_ACTIVATE_PUMB);
     }
+    sendData();
     vTaskDelay(15000 / portTICK_PERIOD_MS);
   }
 }
+
+
 
 void setup() {
   Serial.begin(115200); //UART
