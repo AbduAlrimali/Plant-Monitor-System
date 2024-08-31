@@ -13,8 +13,8 @@ float temperatureData;
 #define ROWS  4
 #define COLS  4
 
-uint8_t rowPins[ROWS] = {14, 27, 26, 25}; // GIOP14, GIOP27, GIOP26, GIOP25
-uint8_t colPins[COLS] = {33, 32, 18, 19}; // GIOP33, GIOP32, GIOP18, GIOP19
+uint8_t rowPins[ROWS] = {13, 12, 14, 27}; // GIOP14, GIOP27, GIOP26, GIOP25
+uint8_t colPins[COLS] = {26, 25, 33, 12}; // GIOP33, GIOP32, GIOP18, GIOP19
 
 char keyMap[ROWS][COLS] = {
   {'1','2','3', 'A'},

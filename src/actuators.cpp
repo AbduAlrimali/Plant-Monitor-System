@@ -11,33 +11,38 @@ void lcd_setup(){
     // turn on LCD backlight                      
     lcd.backlight();
 }
-
 void displayHumidity(){
+    Serial.println("Humidity lcd printed");
     lcd.setCursor(0, 0);
     lcd.clear();
     lcd.print("Humidity: " + String(humidityData));
 }
 void displayTemprature(){
+    Serial.println("Temprature lcd printed");
     lcd.setCursor(0, 0);
     lcd.clear();
     lcd.print("Temprature: " + String(temperatureData));
 }
 void displayWater(){
+    Serial.println("Water Size lcd printed");
     lcd.setCursor(0, 0);
     lcd.clear();
     lcd.print("Water Size: " + String(waterData));
 }
 void displayGas(){
+    Serial.println("Gas lcd printed");
     lcd.setCursor(0, 0);
     lcd.clear();
     lcd.print("Gas: " + String(gasData));
 }
 void displayMoisture(){
+    Serial.println("Moisture lcd printed");
     lcd.setCursor(0, 0);
     lcd.clear();
     lcd.print("Moisture: " + String(moistureData));
 }
 void displayLight(){
+    Serial.println("Light Intense lcd printed");
     lcd.setCursor(0, 0);
     lcd.clear();
     lcd.print("Light Intense: " + String(lightData));

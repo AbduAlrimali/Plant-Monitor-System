@@ -17,7 +17,6 @@ void setup() {
   pinMode(ECHO_PIN, INPUT);
   pinMode(DHT_PIN, INPUT);
   pinMode(RELAY_PIN, OUTPUT);
-  pinMode(LCD_PIN, OUTPUT);
 
   //initialize the components
   input_setup();

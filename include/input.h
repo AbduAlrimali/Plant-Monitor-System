@@ -12,9 +12,6 @@
 #define TRIG_PIN 5
 #define ECHO_PIN 18
 #define RELAY_PIN 2
-#define KEYPAD_PIN_BEGIN 0
-#define KEYPAD_PIN_END 0
-#define LCD_PIN 0
 
 extern uint8_t rowPins[];
 extern uint8_t colPins[];
