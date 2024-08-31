@@ -1,10 +1,10 @@
 #include <handler.h>
 #include<hivemq.h>
-#include "sensors.h"
+#include <input.h>
+#include<actuators.h>
 #include <wifi_setup.h>
 
 QueueHandle_t xEventQueue;
-const TickType_t xDelay = 15000 / portTICK_PERIOD_MS;
 
 void handler_setup(){
     //setup tasks needed
@@ -14,16 +14,6 @@ void handler_setup(){
     xTaskCreate(&wifiMonitoringTask, "WiFi Monitor", 4096, NULL, 1, NULL); //monitor wifi status and take action
     xEventQueue = xQueueCreate(10, sizeof(SystemEvent_t));
     Serial.println("Handler is ready.");
-}
-
-// activate the pumb when event is received 
-void activatePumb(){
-    Serial.println("Pumb Activated");
-    digitalWrite(RELAY_PIN, HIGH);
-    vTaskDelay( xDelay );
-    digitalWrite(RELAY_PIN, LOW);
-    Serial.println("Pumb Deactivated");
-
 }
 
 // a function to send system events to the handler queue
@@ -46,6 +36,24 @@ void eventHandlerTask(void* pvParameters){
             switch (receivedEvent) {
                 case EVENT_ACTIVATE_PUMB:
                     activatePumb();
+                    break;
+                case LCD_SHOW_WATER:
+                    displayWater();
+                    break;
+                case LCD_SHOW_GAS:
+                    displayGas();
+                    break;
+                case LCD_SHOW_HUMIDETY:
+                    displayHumidity();
+                    break;
+                case LCD_SHOW_TEMPRATURE:
+                    displayTemprature();
+                    break;
+                case LCD_SHOW_LIGHT:
+                    displayLight();
+                    break;
+                case LCD_SHOW_MOISTURE:
+                    displayMoisture();
                     break;
                 default:
                     Serial.println("Unusual event occured!");
