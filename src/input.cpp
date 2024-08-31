@@ -22,19 +22,20 @@ char keyMap[ROWS][COLS] = {
   {'7','8','9', 'C'},
   {'*','0','#', 'D'}
 };
+Keypad keypad = Keypad(makeKeymap(keyMap), rowPins, colPins, ROWS, COLS );
+DHT dht(DHT_PIN, DHT11);
 
-void handleKeypadEvent(char key) {
-  Serial.println("Keypad is pressed");
-  if (key) {  // Check if a key was pressed
-    SystemEvent_t keyEvent = static_cast<SystemEvent_t>(key - '0'); // Convert char to enum
-    sendSystemEvent(keyEvent); 
+void handleKeypadEvent(void* pvParameters) {
+  while(1){
+    char key = keypad.getKey();
+    if (key) {  // Check if a key was pressed
+      SystemEvent_t keyEvent = static_cast<SystemEvent_t>(key - '0'); // Convert char to enum
+      sendSystemEvent(keyEvent);
+      vTaskDelay(500 / portTICK_PERIOD_MS);
+    }
   }
 }
-DHT dht(DHT_PIN, DHT11);
-void input_setup(){
-    Keypad keypad = Keypad(makeKeymap(keyMap), rowPins, colPins, ROWS, COLS );
-    keypad.addEventListener(&handleKeypadEvent); // Attach the callback function
-}
+
 
 int readTemperature() { //reading from DHT11
     return (int) dht.readTemperature(); //int

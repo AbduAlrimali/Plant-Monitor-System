@@ -32,4 +32,5 @@ int readLightIntensity();
 float readWater();
 void sensor_reading(void* pvParameters);
 void input_setup();
+void handleKeypadEvent(void* pvParameters);
 #endif
