@@ -17,10 +17,10 @@ uint8_t rowPins[ROWS] = {14, 27, 26, 25}; // GIOP14, GIOP27, GIOP26, GIOP25
 uint8_t colPins[COLS] = {33, 32, 18, 19}; // GIOP33, GIOP32, GIOP18, GIOP19
 
 char keyMap[ROWS][COLS] = {
-  {'10','20','30', '110'},
-  {'40','50','60', '120'},
-  {'70','80','90', '130'},
-  {'160','0','150', '140'}
+  {'1','2','3', 'A'},
+  {'4','5','6', 'B'},
+  {'7','8','9', 'C'},
+  {'*','0','#', 'D'}
 };
 
 void handleKeypadEvent(char key) {
