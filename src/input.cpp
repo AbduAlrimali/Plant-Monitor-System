@@ -13,8 +13,8 @@ float temperatureData;
 #define ROWS  4
 #define COLS  4
 
-uint8_t rowPins[ROWS] = {13, 12, 14, 27}; // GIOP14, GIOP27, GIOP26, GIOP25
-uint8_t colPins[COLS] = {26, 25, 33, 12}; // GIOP33, GIOP32, GIOP18, GIOP19
+uint8_t rowPins[ROWS] = {13, 12, 14, 27}; 
+uint8_t colPins[COLS] = {26, 25, 33, 12}; 
 
 char keyMap[ROWS][COLS] = {
   {'1','2','3', 'A'},
@@ -24,6 +24,7 @@ char keyMap[ROWS][COLS] = {
 };
 
 void handleKeypadEvent(char key) {
+  Serial.println("Keypad is pressed");
   if (key) {  // Check if a key was pressed
     SystemEvent_t keyEvent = static_cast<SystemEvent_t>(key - '0'); // Convert char to enum
     sendSystemEvent(keyEvent); 
@@ -32,11 +33,11 @@ void handleKeypadEvent(char key) {
 DHT dht(DHT_PIN, DHT11);
 void input_setup(){
     Keypad keypad = Keypad(makeKeymap(keyMap), rowPins, colPins, ROWS, COLS );
-    keypad.addEventListener(handleKeypadEvent); // Attach the callback function
+    keypad.addEventListener(&handleKeypadEvent); // Attach the callback function
 }
 
-float readTemperature() { //reading from DHT11
-    return dht.readTemperature(); 
+int readTemperature() { //reading from DHT11
+    return (int) dht.readTemperature(); //int
 }
 
 float readHumidity() { //reading from DHT11
@@ -55,7 +56,7 @@ int readGas() {
 
 int readLightIntensity() {
     int data = analogRead(LIGHT_PIN); // reading from light sensor
-    return 100 - ((data / 4095.00) * 100); 
+    return 100 - ((data / 4095.00) * 100); //height = 10cm - r = 2cm
 }
 
 float readWater() { // calculating distance using the ultrasonic sensor
@@ -98,7 +99,7 @@ void sensor_reading(void* pvParameters){
     Serial.println("Sensors read successfully.");
 
   //take action upon sensor readings
-    if(moistureData < 20 || temperatureData>35) {
+    if(moistureData < 20) {
       sendSystemEvent(EVENT_ACTIVATE_PUMB);
     }
     //send the data to hive

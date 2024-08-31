@@ -24,7 +24,7 @@ extern float humidityData;
 extern float temperatureData;
 
 // Function prototypes
-float readTemperature();
+int readTemperature();
 float readHumidity();
 int readSoilMoisture();
 int readGas();
