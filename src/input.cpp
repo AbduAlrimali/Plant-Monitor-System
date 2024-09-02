@@ -14,7 +14,7 @@ float temperatureData;
 #define COLS  4
 
 uint8_t rowPins[ROWS] = {13, 12, 14, 27}; 
-uint8_t colPins[COLS] = {26, 25, 33, 12}; 
+uint8_t colPins[COLS] = {26, 25, 33, 32}; 
 
 char keyMap[ROWS][COLS] = {
   {'1','2','3', 'A'},
@@ -29,7 +29,7 @@ void handleKeypadEvent(void* pvParameters) {
   while(1){
     char key = keypad.getKey();
     if (key) {  // Check if a key was pressed
-      SystemEvent_t keyEvent = static_cast<SystemEvent_t>(key - '0'); // Convert char to enum
+      SystemEvent_t keyEvent = static_cast<SystemEvent_t>(key - '#'); // Convert char to enum
       sendSystemEvent(keyEvent);
       vTaskDelay(500 / portTICK_PERIOD_MS);
     }

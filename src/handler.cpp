@@ -8,11 +8,11 @@ QueueHandle_t xEventQueue;
 
 void handler_setup(){
     //setup tasks needed
-    xTaskCreate(&sensor_reading, "ReadingSensors", 8192, NULL, 1, NULL); //sensor reading task
-    xTaskCreate(&eventHandlerTask, "EventHandler", 8192, NULL, 1, NULL); //a task to handle incoming events from mqtt
-    xTaskCreate(&keeping_connection, "MQTTKeeper", 8192, NULL, 1, NULL); // keep mqtt connection
-    xTaskCreate(&wifiMonitoringTask, "WiFi Monitor", 4096, NULL, 1, NULL); //monitor wifi status and take action
-    //xTaskCreate(&handleKeypadEvent, "Keypad", 4096, NULL, 1, NULL); //monitor wifi status and take action
+    xTaskCreate(&sensor_reading, "ReadingSensors", 2048, NULL, 1, NULL); //sensor reading task
+    xTaskCreate(&eventHandlerTask, "EventHandler", 2048, NULL, 1, NULL); //a task to handle incoming events from mqtt
+    xTaskCreate(&keeping_connection, "MQTTKeeper", 1024, NULL, 1, NULL); // keep mqtt connection
+    xTaskCreate(&wifiMonitoringTask, "WiFi Monitor", 512, NULL, 1, NULL); //monitor wifi status and take action
+    xTaskCreate(&handleKeypadEvent, "Keypad", 1024, NULL, 1, NULL); 
     xEventQueue = xQueueCreate(10, sizeof(SystemEvent_t));
     Serial.println("Handler is ready.");
 }
