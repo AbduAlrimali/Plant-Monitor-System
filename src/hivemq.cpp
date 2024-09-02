@@ -118,6 +118,7 @@ void keeping_connection(void* pvParameters) {
             reconnect();
         }
         client.loop();
+        vTaskDelay(100 / portTICK_PERIOD_MS);
     }
 }
 
