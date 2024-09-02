@@ -25,4 +25,6 @@ void setup() {
   handler_setup();
 }
 
-void loop() {}
+void loop() {
+  vTaskDelete(NULL);
+}
