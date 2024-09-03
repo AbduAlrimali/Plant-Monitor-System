@@ -37,13 +37,20 @@ void handleKeypadEvent(void* pvParameters) {
   }
 }
 
-
-int readTemperature() { //reading from DHT11
-    return dht.readTemperature(); //int
+float readTemperature() { //reading from DHT11
+    float val = dht.readTemperature();
+    if(isnan(val)){
+      return 30;
+    }
+    return val;
 }
 
 float readHumidity() { //reading from DHT11
-    return dht.readHumidity();
+    float val = dht.readHumidity();
+    if(isnan(val)){
+      return 50;
+    }
+    return val;
 }
 
 int readSoilMoisture() { //reading from soil moisture sensor
@@ -68,9 +75,9 @@ float readWater() { // calculating distance using the ultrasonic sensor
     delayMicroseconds(10);
     digitalWrite(TRIG_PIN, LOW);
     int duration = pulseIn(ECHO_PIN, HIGH);
-    double distance = (duration * 0.034) / 2; //height = 10cm - r = 2cm
-    //
-    return distance;
+    double distance = (duration * 0.034) / 2; //full = 2, empty = 10
+    
+    return ((8-distance)/8)*100;
 }
 
 void printData(){
@@ -90,12 +97,12 @@ void printData(){
 
 void sendData(){
     JsonDocument doc;
-    doc["tmp"] = sensorsData[5];
-    doc["distance"] = sensorsData[3];
-    doc["air"] = sensorsData[1];
-    doc["light"] = sensorsData[2];
-    doc["humidity"] = sensorsData[4];
-    doc["soil moisture"] = sensorsData[0];
+    doc["tmp"] = (int) sensorsData[5];
+    doc["distance"] = (int) sensorsData[3];
+    doc["air"] = (int) sensorsData[1];
+    doc["light"] = (int) sensorsData[2];
+    doc["humidity"] = (int) sensorsData[4];
+    doc["soil moisture"] = (int) sensorsData[0];
 
   //convert json to c string
   String output;

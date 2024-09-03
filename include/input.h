@@ -21,7 +21,7 @@ extern double sensorsData[];
 extern String sensorsName[];
 
 // Function prototypes
-int readTemperature();
+float readTemperature();
 float readHumidity();
 int readSoilMoisture();
 int readGas();
