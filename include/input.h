@@ -12,6 +12,8 @@
 #define TRIG_PIN 5
 #define ECHO_PIN 18
 #define RELAY_PIN 2
+#define GREEN_PIN 0
+#define RED_PIN 0
 
 #define SENSORS_NUM 6
 
@@ -19,6 +21,8 @@ extern uint8_t rowPins[];
 extern uint8_t colPins[];
 extern double sensorsData[];
 extern String sensorsName[];
+
+enum sensors { SOIL_MOISTURE=0, GAS, LIGHT, WATER, HUMIDITY, TEMPERATURE };
 
 // Function prototypes
 float readTemperature();

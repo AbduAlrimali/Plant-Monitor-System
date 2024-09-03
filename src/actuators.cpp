@@ -21,10 +21,16 @@ void displayLCD(void* pvParameters){
         lcd.setCursor(0, 0);
         lcd.clear();
         if(currentLCDState==-1) {
-            lcd.print("Welcome to Smart PLant.");
+            lcd.print("Welcome to Smart");
+            lcd.setCursor(0, 1);
+            lcd.print("PLant.");
+            lcd.setCursor(0, 0);
         } else {
             formattedData = String(sensorsData[currentLCDState], 2);
-            lcd.print(sensorsName[currentLCDState] + formattedData);
+            lcd.print(sensorsName[currentLCDState]);
+            lcd.setCursor(0, 1);
+            lcd.print(formattedData);
+            lcd.setCursor(0, 0);
         }
         vTaskDelay(200 / portTICK_PERIOD_MS);
     }
@@ -51,4 +57,13 @@ void activatePumb(void* pvParameters){
         }
         vTaskDelay(200 / portTICK_PERIOD_MS);
     }
+}
+
+void activateRed(){
+    digitalWrite(GREEN_PIN, LOW);
+    digitalWrite(RED_PIN, HIGH);
+}
+void activateGreen(){
+    digitalWrite(RED_PIN, LOW);
+    digitalWrite(GREEN_PIN, HIGH);
 }
