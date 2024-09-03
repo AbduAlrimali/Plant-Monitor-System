@@ -99,8 +99,6 @@ void sendData(){
   //convert json to c string
   String output;
   serializeJson(doc, output);
-
-  printData();
   
   //send to hivemq
   send_hive(output.c_str());
@@ -116,6 +114,8 @@ void sensor_reading(void* pvParameters){
     humidityData = readHumidity();
     temperatureData = readTemperature();
     Serial.println("Sensors read successfully.");
+
+    printData();
 
   //take action upon sensor readings
     if(moistureData < 20) {
