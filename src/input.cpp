@@ -72,6 +72,21 @@ float readWater() { // calculating distance using the ultrasonic sensor
     return distance;
 }
 
+void printData(){
+  Serial.print("Temprature: ");
+  Serial.println(temperatureData);
+  Serial.print("Humidity: ");
+  Serial.println(humidityData);
+  Serial.print("Air Quality: ");
+  Serial.println(gasData);
+  Serial.print("Light: ");
+  Serial.println(lightData);
+  Serial.print("Moisture: ");
+  Serial.println(moistureData);
+  Serial.print("Water level: ");
+  Serial.println(waterData);
+}
+
 void sendData(){
     JsonDocument doc;
     doc["tmp"] = temperatureData;
@@ -84,6 +99,8 @@ void sendData(){
   //convert json to c string
   String output;
   serializeJson(doc, output);
+
+  printData();
   
   //send to hivemq
   send_hive(output.c_str());
