@@ -4,6 +4,9 @@
 
 int lcdColumns = 16;
 int lcdRows = 2;
+int currentLCDState=-1;
+PumpState currentPumpState = PUMP_OFF;
+
 LiquidCrystal_I2C lcd(0x27, lcdColumns, lcdRows);
 void lcd_setup(){
     // initialize LCD
@@ -11,48 +14,41 @@ void lcd_setup(){
     // turn on LCD backlight                      
     lcd.backlight();
 }
-void displayHumidity(){
-    Serial.println("Humidity lcd printed");
-    lcd.setCursor(0, 0);
-    lcd.clear();
-    lcd.print("Humidity: " + String(humidityData));
-}
-void displayTemprature(){
-    Serial.println("Temprature lcd printed");
-    lcd.setCursor(0, 0);
-    lcd.clear();
-    lcd.print("Temprature: " + String(temperatureData));
-}
-void displayWater(){
-    Serial.println("Water Size lcd printed");
-    lcd.setCursor(0, 0);
-    lcd.clear();
-    lcd.print("Water Size: " + String(waterData));
-}
-void displayGas(){
-    Serial.println("Gas lcd printed");
-    lcd.setCursor(0, 0);
-    lcd.clear();
-    lcd.print("Gas: " + String(gasData));
-}
-void displayMoisture(){
-    Serial.println("Moisture lcd printed");
-    lcd.setCursor(0, 0);
-    lcd.clear();
-    lcd.print("Moisture: " + String(moistureData));
-}
-void displayLight(){
-    Serial.println("Light Intense lcd printed");
-    lcd.setCursor(0, 0);
-    lcd.clear();
-    lcd.print("Light Intense: " + String(lightData));
-}
 
+String formattedData;
+void displayLCD(void* pvParameters){
+    while(1){
+        lcd.setCursor(0, 0);
+        lcd.clear();
+        if(currentLCDState==-1) {
+            lcd.print("Welcome to Smart PLant.");
+        } else {
+            formattedData = String(sensorsData[currentLCDState], 2);
+            lcd.print(sensorsName[currentLCDState] + formattedData);
+        }
+        vTaskDelay(200 / portTICK_PERIOD_MS);
+    }
+}
+unsigned long previousMillis;
 // activate the pumb when event is received 
-void activatePumb(){
-    Serial.println("Pumb Activated");
-    digitalWrite(RELAY_PIN, HIGH);
-    vTaskDelay( xDelay );
-    digitalWrite(RELAY_PIN, LOW);
-    Serial.println("Pumb Deactivated");
+void activatePumb(void* pvParameters){
+    while(1){
+        switch (currentPumpState) {
+            case PUMP_ON:
+                Serial.println("Pumb Activated");
+                digitalWrite(RELAY_PIN, HIGH);
+                currentPumpState = PUMP_WAITING; // Move to the next state
+                previousMillis = millis(); // Record the time
+                break;
+            case PUMP_WAITING:
+                if (millis() - previousMillis >= 15000) {
+                    digitalWrite(RELAY_PIN, LOW);
+                    Serial.println("Pumb Deactivated");
+                    currentPumpState = PUMP_OFF;
+                }
+                break;
+                
+        }
+        vTaskDelay(200 / portTICK_PERIOD_MS);
+    }
 }

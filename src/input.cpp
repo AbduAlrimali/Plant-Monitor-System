@@ -3,15 +3,11 @@
 #include <ArduinoJson.h>
 #include <hivemq.h>
 
-int moistureData;
-int gasData;
-int lightData;
-float waterData;
-float humidityData;
-int temperatureData;
-
 #define ROWS  4
 #define COLS  4
+
+double sensorsData[SENSORS_NUM];
+String sensorsName[SENSORS_NUM] = {"Soil Moisture: ", "Gas: ", "Light Intensity: ", "Water Level: ", "Humidity: ", "Soil Moisture: "};
 
 uint8_t rowPins[ROWS] = {13, 12, 14, 27}; 
 uint8_t colPins[COLS] = {26, 25, 33, 32}; 
@@ -73,33 +69,33 @@ float readWater() { // calculating distance using the ultrasonic sensor
     digitalWrite(TRIG_PIN, LOW);
     int duration = pulseIn(ECHO_PIN, HIGH);
     double distance = (duration * 0.034) / 2; //height = 10cm - r = 2cm
-
+    //
     return distance;
 }
 
 void printData(){
   Serial.print("Temprature: ");
-  Serial.println(temperatureData);
+  Serial.println(sensorsData[5]);
   Serial.print("Humidity: ");
-  Serial.println(humidityData);
+  Serial.println(sensorsData[4]);
   Serial.print("Air Quality: ");
-  Serial.println(gasData);
+  Serial.println(sensorsData[1]);
   Serial.print("Light: ");
-  Serial.println(lightData);
+  Serial.println(sensorsData[2]);
   Serial.print("Moisture: ");
-  Serial.println(moistureData);
+  Serial.println(sensorsData[0]);
   Serial.print("Water level: ");
-  Serial.println(waterData);
+  Serial.println(sensorsData[3]);
 }
 
 void sendData(){
     JsonDocument doc;
-    doc["tmp"] = temperatureData;
-    doc["distance"] = waterData;
-    doc["air"] = gasData;
-    doc["light"] = lightData;
-    doc["humidity"] = humidityData;
-    doc["soil moisture"] = moistureData;
+    doc["tmp"] = sensorsData[5];
+    doc["distance"] = sensorsData[3];
+    doc["air"] = sensorsData[1];
+    doc["light"] = sensorsData[2];
+    doc["humidity"] = sensorsData[4];
+    doc["soil moisture"] = sensorsData[0];
 
   //convert json to c string
   String output;
@@ -112,18 +108,18 @@ void sendData(){
 void sensor_reading(void* pvParameters){
   while(1) {
     // reading sensors values
-    moistureData = readSoilMoisture();
-    gasData = readGas();
-    lightData = readLightIntensity();
-    waterData = readWater();
-    humidityData = readHumidity();
-    temperatureData = readTemperature();
+    sensorsData[0] = readSoilMoisture();
+    sensorsData[1] = readGas();
+    sensorsData[2] = readLightIntensity();
+    sensorsData[3] = readWater();
+    sensorsData[4] = readHumidity();
+    sensorsData[5] = readTemperature();
     Serial.println("Sensors read successfully.");
 
     printData();
 
   //take action upon sensor readings
-    if(moistureData < 20) {
+    if(sensorsData[0] < 20) {
       sendSystemEvent(EVENT_ACTIVATE_PUMB);
     }
     //send the data to hive

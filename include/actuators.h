@@ -5,13 +5,13 @@
 
 extern LiquidCrystal_I2C lcd;
 
+void activatePumb(void* pvParameters);
+void displayLCD(void* pvParameters);
 void lcd_setup();
-void displayHumidity();
-void displayTemprature();
-void displayWater();
-void displayGas();
-void displayMoisture();
-void displayLight();
-void activatePumb();
+
+enum PumpState { PUMP_OFF, PUMP_ON, PUMP_WAITING };
+extern PumpState currentPumpState;
+
+extern int currentLCDState;
 
 #endif

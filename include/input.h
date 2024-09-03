@@ -13,15 +13,12 @@
 #define ECHO_PIN 18
 #define RELAY_PIN 2
 
+#define SENSORS_NUM 6
+
 extern uint8_t rowPins[];
 extern uint8_t colPins[];
-
-extern int moistureData;
-extern int gasData;
-extern int lightData;
-extern float waterData;
-extern float humidityData;
-extern float temperatureData;
+extern double sensorsData[];
+extern String sensorsName[];
 
 // Function prototypes
 int readTemperature();

@@ -23,6 +23,4 @@ void eventHandlerTask(void* pvParameters);
 bool sendSystemEvent(SystemEvent_t event);
 void sensor_reading(void* pvParameters);
 
-const TickType_t xDelay = 15000 / portTICK_PERIOD_MS;
-
 #endif

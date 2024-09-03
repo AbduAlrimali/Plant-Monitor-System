@@ -13,6 +13,8 @@ void handler_setup(){
     xTaskCreatePinnedToCore(&keeping_connection, "MQTTKeeper", 8192, NULL, 1, NULL, 0); // keep mqtt connection
     xTaskCreatePinnedToCore(&wifiMonitoringTask, "WiFi Monitor", 4096, NULL, 1, NULL, 0); //monitor wifi status and take action
     xTaskCreatePinnedToCore(&handleKeypadEvent, "Keypad", 4096, NULL, 1, NULL, 1); 
+    xTaskCreatePinnedToCore(&displayLCD, "displayLCD", 4096, NULL, 1, NULL, 1);
+    xTaskCreatePinnedToCore(&activatePumb, "activatePumb", 4096, NULL, 1, NULL, 1); 
     xEventQueue = xQueueCreate(10, sizeof(SystemEvent_t));
     Serial.println("Handler is ready.");
 }
@@ -36,25 +38,25 @@ void eventHandlerTask(void* pvParameters){
         if (xQueueReceive(xEventQueue, &receivedEvent, portMAX_DELAY) == pdTRUE) {
             switch (receivedEvent) {
                 case EVENT_ACTIVATE_PUMB:
-                    activatePumb();
+                    currentPumpState = PUMP_ON;
                     break;
                 case LCD_SHOW_WATER:
-                    displayWater();
+                    currentLCDState=3;
                     break;
                 case LCD_SHOW_GAS:
-                    displayGas();
+                    currentLCDState=1;
                     break;
                 case LCD_SHOW_HUMIDETY:
-                    displayHumidity();
+                    currentLCDState=4;
                     break;
                 case LCD_SHOW_TEMPRATURE:
-                    displayTemprature();
+                    currentLCDState=5;
                     break;
                 case LCD_SHOW_LIGHT:
-                    displayLight();
+                    currentLCDState=2;
                     break;
                 case LCD_SHOW_MOISTURE:
-                    displayMoisture();
+                    currentLCDState=0;
                     break;
                 default:
                     Serial.println("Unusual event occured!");
