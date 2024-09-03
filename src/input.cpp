@@ -8,7 +8,7 @@ int gasData;
 int lightData;
 float waterData;
 float humidityData;
-float temperatureData;
+int temperatureData;
 
 #define ROWS  4
 #define COLS  4
@@ -25,6 +25,10 @@ char keyMap[ROWS][COLS] = {
 Keypad keypad = Keypad(makeKeymap(keyMap), rowPins, colPins, ROWS, COLS );
 DHT dht(DHT_PIN, DHT11);
 
+void input_setup(){
+  dht.begin();
+}
+
 void handleKeypadEvent(void* pvParameters) {
   while(1){
     char key = keypad.getKey();
@@ -39,7 +43,7 @@ void handleKeypadEvent(void* pvParameters) {
 
 
 int readTemperature() { //reading from DHT11
-    return (int) dht.readTemperature(); //int
+    return dht.readTemperature(); //int
 }
 
 float readHumidity() { //reading from DHT11
@@ -58,7 +62,7 @@ int readGas() {
 
 int readLightIntensity() {
     int data = analogRead(LIGHT_PIN); // reading from light sensor
-    return 100 - ((data / 4095.00) * 100); //height = 10cm - r = 2cm
+    return 100 - ((data / 4095.00) * 100); 
 }
 
 float readWater() { // calculating distance using the ultrasonic sensor
@@ -68,7 +72,8 @@ float readWater() { // calculating distance using the ultrasonic sensor
     delayMicroseconds(10);
     digitalWrite(TRIG_PIN, LOW);
     int duration = pulseIn(ECHO_PIN, HIGH);
-    double distance = (duration * 0.034) / 2;
+    double distance = (duration * 0.034) / 2; //height = 10cm - r = 2cm
+
     return distance;
 }
 

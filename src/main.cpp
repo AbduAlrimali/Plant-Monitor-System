@@ -19,6 +19,7 @@ void setup() {
   pinMode(RELAY_PIN, OUTPUT);
 
   //initialize the components
+  input_setup();
   lcd_setup();
   start_wifi();
   hivemq_setup();
