@@ -29,7 +29,7 @@ void handleKeypadEvent(void* pvParameters) {
     char key = keypad.getKey();
     if (key) {  // Check if a key was pressed
       Serial.println(key);
-      SystemEvent_t keyEvent = static_cast<SystemEvent_t>(key - '#'); // Convert char to enum
+      SystemEvent_t keyEvent = static_cast<SystemEvent_t>(key - '0'); // Convert char to enum
       sendSystemEvent(keyEvent);
       vTaskDelay(500 / portTICK_PERIOD_MS);
     }
@@ -155,9 +155,9 @@ void manualIrrigation(void* pvParameters){
   while(1){
     int button = digitalRead(PUSHBUTTON_PIN);
     if(button){
-      digitalWrite(RELAY_PIN, HIGH);
-    } else{
       digitalWrite(RELAY_PIN, LOW);
+    } else{
+      digitalWrite(RELAY_PIN, HIGH);
     }
     vTaskDelay(200 / portTICK_PERIOD_MS);
   }
