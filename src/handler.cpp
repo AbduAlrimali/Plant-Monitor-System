@@ -42,22 +42,28 @@ void eventHandlerTask(void* pvParameters){
                     currentPumpState = PUMP_ON;
                     break;
                 case LCD_SHOW_WATER:
-                    currentLCDState=3;
+                    currentLCDState=SENSOR_WATER;
                     break;
                 case LCD_SHOW_GAS:
-                    currentLCDState=1;
+                    currentLCDState=SENSOR_GAS;
                     break;
                 case LCD_SHOW_HUMIDETY:
-                    currentLCDState=4;
+                    currentLCDState=SENSOR_HUMIDITY;
                     break;
                 case LCD_SHOW_TEMPRATURE:
-                    currentLCDState=5;
+                    currentLCDState=SENSOR_TEMPERATURE;
                     break;
                 case LCD_SHOW_LIGHT:
-                    currentLCDState=2;
+                    currentLCDState=SENSOR_LIGHT;
                     break;
                 case LCD_SHOW_MOISTURE:
-                    currentLCDState=0;
+                    currentLCDState=SENSOR_SOIL_MOISTURE;
+                    break;
+                case EVENT_WARNING:
+                    activateRed();
+                    break;
+                case EVENT_NORMAL:
+                    activateGreen();
                     break;
                 default:
                     Serial.println("Unusual event occured!");
