@@ -107,6 +107,8 @@ int readLightIntensity() {
 
     ldrResistance = ldrVoltage / resistorVoltage * REF_RESISTANCE;
     ldrLux = LUX_CALC_SCALAR * pow(ldrResistance, LUX_CALC_EXPONENT);
+
+    return ldrLux;
 }
 
 float readWater() { // calculating distance using the ultrasonic sensor
