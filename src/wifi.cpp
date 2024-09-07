@@ -17,6 +17,24 @@ void start_wifi() {
     Serial.println(WiFi.localIP());
     Serial.println();
 }
+void start_wifimanager(){
+  // Create a WiFiManager object
+  WiFiManager wifiManager;
+
+  // Set a timeout (in milliseconds) for the configuration portal
+  wifiManager.setTimeout(180); 
+
+  // Start the WiFiManager configuration portal
+  if (!wifiManager.autoConnect("study area")) { // Replace with your desired AP name
+    Serial.println("Failed to connect and hit timeout");
+    // Reset the ESP32 if connection fails
+    ESP.restart();
+  }
+
+  Serial.println("Connected to WiFi :)");
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
+}
 static bool wifiConnected = false;  // wifi status to know the previous status
 
 void wifiMonitoringTask(void* pvParameters) {
