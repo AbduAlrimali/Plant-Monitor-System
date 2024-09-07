@@ -4,6 +4,13 @@
 #include <hivemq.h>
 #include<actuators.h>
 
+
+#define MAX_ADC_READING           4095
+#define ADC_REF_VOLTAGE           5.0
+#define REF_RESISTANCE            5030     // measure this for best results
+#define LUX_CALC_SCALAR           12518931 // from experiment
+#define LUX_CALC_EXPONENT         -1.405   // from experiment
+
 #define ROWS  4
 #define COLS  4
 
@@ -87,11 +94,19 @@ int readGas() {
 
 float lux=0.00,ADC_value=0.0048828125,LDR_value;
 int readLightIntensity() {
-    LDR_value = analogRead(LIGHT_PIN); // reading from light sensor
-    lux = (250.000000/(ADC_value*LDR_value))-50.000000;
-    LDR_value = map(LDR_value, 0, 4095, 0, 10000);
-    return LDR_value;
-    //return 100 - ((data / 4095.00) * 100); 
+    int   ldrRawData;
+    float resistorVoltage, ldrVoltage;
+    float ldrResistance;
+    float ldrLux;
+
+    ldrRawData = analogRead(LIGHT_PIN);
+    resistorVoltage = (float)ldrRawData / MAX_ADC_READING * ADC_REF_VOLTAGE;
+
+    // voltage across the LDR is the 5V supply minus the 5k resistor voltage
+    ldrVoltage = ADC_REF_VOLTAGE - resistorVoltage;
+
+    ldrResistance = ldrVoltage / resistorVoltage * REF_RESISTANCE;
+    ldrLux = LUX_CALC_SCALAR * pow(ldrResistance, LUX_CALC_EXPONENT);
 }
 
 float readWater() { // calculating distance using the ultrasonic sensor
