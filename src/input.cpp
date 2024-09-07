@@ -7,7 +7,7 @@
 
 #define MAX_ADC_READING           4095
 #define ADC_REF_VOLTAGE           5.0
-#define REF_RESISTANCE            5030     // measure this for best results
+#define REF_RESISTANCE            3030     // measure this for best results
 #define LUX_CALC_SCALAR           12518931 // from experiment
 #define LUX_CALC_EXPONENT         -1.405   // from experiment
 
