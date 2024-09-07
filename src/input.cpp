@@ -10,7 +10,7 @@
 double sensorsData[SENSORS_NUM];
 
 uint8_t rowPins[ROWS] = {13, 12, 14, 27}; 
-uint8_t colPins[COLS] = {26, 25, 33, 32}; 
+uint8_t colPins[COLS] = {26, 25, 33, 4}; 
 
 char keyMap[ROWS][COLS] = {
   {'1','2','3', 'A'},
@@ -54,13 +54,14 @@ float readHumidity() { //reading from DHT11
 }
 
 int readSoilMoisture() { //reading from soil moisture sensor
-    float data = analogRead(SOIL_PIN);
-    return 100 - ((data / 4095.00) * 100); 
+    int data= analogRead(SOIL_PIN);
+    int w=4095-data;
+    return min(map(w,0,4095,0,170), 100l);
 }
 
 int readGas() {
     int data = analogRead(GAS_PIN); //reading from gas sensor
-    int ppm=map(data,0,4095,200,10000);
+    int ppm=map(data,0,4095,20,1000);
     return ppm;
 }
 
