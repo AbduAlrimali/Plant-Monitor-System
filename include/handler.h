@@ -15,7 +15,9 @@ typedef enum {
     LCD_SHOW_MOISTURE=16,
     LCD_SHOW_GAS=17,
     LCD_SHOW_LIGHT=18,
-    LCD_SHOW_WATER=19
+    LCD_SHOW_WATER=19,
+    EVENT_WARNING,
+    EVENT_NORMAL
 } SystemEvent_t;
 
 void handler_setup();

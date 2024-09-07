@@ -23,7 +23,7 @@ extern uint8_t colPins[];
 extern double sensorsData[];
 extern String sensorsName[];
 
-enum sensors { SOIL_MOISTURE=0, GAS, LIGHT, WATER, HUMIDITY, TEMPERATURE };
+enum sensors { SENSOR_SOIL_MOISTURE=0, SENSOR_GAS, SENSOR_LIGHT, SENSOR_WATER, SENSOR_HUMIDITY, SENSOR_TEMPERATURE };
 
 // Function prototypes
 float readTemperature();
