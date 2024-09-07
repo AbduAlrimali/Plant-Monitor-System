@@ -81,7 +81,8 @@ int readSoilMoisture() { //reading from soil moisture sensor
 
 int readGas() {
     int data = analogRead(GAS_PIN); //reading from gas sensor
-    return readGasPPM(data);
+    int ppm=map(data,0,4095,200,10000);
+    return ppm;
     //return 100 - ((data / 4095.00) * 100); 
 }
 

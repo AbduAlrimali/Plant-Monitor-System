@@ -6,7 +6,7 @@
 
 // Sensor pin definitions
 #define DHT_PIN 15
-#define SOIL_PIN 32
+#define SOIL_PIN 4
 #define GAS_PIN 34
 #define LIGHT_PIN 35
 #define TRIG_PIN 5
