@@ -75,7 +75,7 @@ float readHumidity() { //reading from DHT11
 }
 
 int readSoilMoisture() { //reading from soil moisture sensor
-    int data = analogRead(SOIL_PIN);
+    float data = analogRead(SOIL_PIN);
     return 100 - ((data / 4095.00) * 100); 
 }
 
