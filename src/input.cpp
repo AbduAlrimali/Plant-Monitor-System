@@ -89,7 +89,7 @@ float lux=0.00,ADC_value=0.0048828125,LDR_value;
 int readLightIntensity() {
     LDR_value = analogRead(LIGHT_PIN); // reading from light sensor
     lux = (250.000000/(ADC_value*LDR_value))-50.000000;
-    return lux;
+    return LDR_value;
     //return 100 - ((data / 4095.00) * 100); 
 }
 
@@ -101,8 +101,7 @@ float readWater() { // calculating distance using the ultrasonic sensor
     digitalWrite(TRIG_PIN, LOW);
     int duration = pulseIn(ECHO_PIN, HIGH);
     double distance = (duration * 0.034) / 2; //full = 2, empty = 10
-    
-    return ((8-distance)/8)*100;
+    return max(((8-distance)/8)*100, 0.0);
 }
 
 void printData(){
