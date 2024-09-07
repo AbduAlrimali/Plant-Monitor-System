@@ -1,7 +1,5 @@
 #include "input.h"
 #include<handler.h>
-#include <ArduinoJson.h>
-#include <hivemq.h>
 
 #define ROWS  4
 #define COLS  4
@@ -29,7 +27,7 @@ void handleKeypadEvent(void* pvParameters) {
     char key = keypad.getKey();
     if (key) {  // Check if a key was pressed
       Serial.println(key);
-      SystemEvent_t keyEvent = static_cast<SystemEvent_t>(key - '#'); // Convert char to enum
+      SystemEvent_t keyEvent = static_cast<SystemEvent_t>(key - '0'); // Convert char to enum
       sendSystemEvent(keyEvent);
       vTaskDelay(500 / portTICK_PERIOD_MS);
     }
@@ -100,22 +98,7 @@ void printData(){
   Serial.println(sensorsData[SENSOR_WATER]);
 }
 
-void sendData(){
-    JsonDocument doc;
-    doc["tmp"] = (int) sensorsData[SENSOR_TEMPERATURE];
-    doc["distance"] = (int) sensorsData[SENSOR_WATER];
-    doc["air"] = (int) sensorsData[SENSOR_GAS];
-    doc["light"] = (int) sensorsData[SENSOR_LIGHT];
-    doc["humidity"] = (int) sensorsData[SENSOR_HUMIDITY];
-    doc["soil moisture"] = (int) sensorsData[SENSOR_SOIL_MOISTURE];
 
-  //convert json to c string
-  String output;
-  serializeJson(doc, output);
-  
-  //send to hivemq
-  send_hive(output.c_str());
-}
 // green - good
 // red - something wrong
 // buzzer - no water
@@ -145,7 +128,7 @@ void sensor_reading(void* pvParameters){
     }
 
     //send the data to hive
-    sendData();
+    sendSystemEvent(EVENT_DATA_READY_FOR_HIVE_MQ);
     //wait 15 seconds for next readings
     vTaskDelay(5000 / portTICK_PERIOD_MS);
   }

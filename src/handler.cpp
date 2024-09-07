@@ -41,6 +41,9 @@ void eventHandlerTask(void* pvParameters){
                 case EVENT_ACTIVATE_PUMB:
                     currentPumpState = PUMP_ON;
                     break;
+                case EVENT_DATA_READY_FOR_HIVE_MQ:
+                    sendData();
+                    break;
                 case LCD_SHOW_WATER:
                     currentLCDState=SENSOR_WATER;
                     break;

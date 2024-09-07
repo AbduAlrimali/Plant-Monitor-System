@@ -24,5 +24,6 @@ void handler_setup();
 void eventHandlerTask(void* pvParameters);
 bool sendSystemEvent(SystemEvent_t event);
 void sensor_reading(void* pvParameters);
+void sendData();
 
 #endif
