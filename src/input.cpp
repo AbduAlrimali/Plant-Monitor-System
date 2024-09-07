@@ -38,6 +38,27 @@ void handleKeypadEvent(void* pvParameters) {
   }
 }
 
+float readGasPPM(int gasADC) {
+    // Constants
+    const float Ro = 10.0;  // Example Ro value in kΩ (calibrate this value)
+    const int RL = 10;      // Load resistance in kΩ (typically 10kΩ)
+    
+    // Convert ADC value to voltage
+    float voltage = gasADC * (3.3 / 4095.0);  // For ESP32 with a 12-bit ADC and 3.3V reference
+
+    // Calculate the sensor resistance Rs
+    float rs = RL * (3.3 - voltage) / voltage;
+
+    // Calculate the ratio Rs/Ro
+    float ratio = rs / Ro;
+
+    // Convert the ratio to ppm using a general formula
+    // Example formula, needs adjustment based on your calibration and gas type
+    float ppm = pow(10, ((log10(ratio) - log10(0.72)) / -0.42));
+
+    return ppm;
+}
+
 float readTemperature() { //reading from DHT11
     float val = dht.readTemperature();
     if(isnan(val)){
@@ -61,7 +82,8 @@ int readSoilMoisture() { //reading from soil moisture sensor
 
 int readGas() {
     int data = analogRead(GAS_PIN); //reading from gas sensor
-    return 100 - ((data / 4095.00) * 100); 
+    return readGasPPM(data);
+    //return 100 - ((data / 4095.00) * 100); 
 }
 
 float lux=0.00,ADC_value=0.0048828125,LDR_value;
