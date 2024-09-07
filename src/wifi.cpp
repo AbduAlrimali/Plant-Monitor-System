@@ -1,8 +1,8 @@
 #include <wifi_setup.h>
 #include <handler.h>
 
-#define WIFI_SSID "Galaxy A05 ffc"
-#define WIFI_PASSWORD "1q2w#3e4r5T"
+#define WIFI_SSID "study area"
+#define WIFI_PASSWORD "2023ss2024"
 
 void start_wifi() {
     WiFi.mode(WIFI_STA);
