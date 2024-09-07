@@ -8,7 +8,6 @@
 #define COLS  4
 
 double sensorsData[SENSORS_NUM];
-String sensorsName[SENSORS_NUM] = {"Soil Moisture: ", "Gas: ", "Light Intensity: ", "Water Level: ", "Humidity: ", "Soil Moisture: "};
 
 uint8_t rowPins[ROWS] = {13, 12, 14, 27}; 
 uint8_t colPins[COLS] = {26, 25, 33, 32}; 
@@ -159,7 +158,7 @@ void sensor_reading(void* pvParameters){
       sendSystemEvent(EVENT_ACTIVATE_PUMB);
     }
 
-    if((sensorsData[SOIL_MOISTURE] < 20 && sensorsData[SOIL_MOISTURE] > 60) || sensorsData[WATER]<30  || (sensorsData[TEMPERATURE] < 20 && sensorsData[TEMPERATURE] > 25) || (sensorsData[LIGHT]<1000 && sensorsData[LIGHT] > 10000) || (sensorsData[HUMIDITY]<40 && sensorsData[HUMIDITY] > 60)){
+    if((sensorsData[SOIL_MOISTURE] < 20 && sensorsData[SOIL_MOISTURE] > 60) || sensorsData[WATER]<30  || (sensorsData[TEMPERATURE] < 20 && sensorsData[TEMPERATURE] > 35) || (sensorsData[LIGHT]<1000 && sensorsData[LIGHT] > 10000) || (sensorsData[HUMIDITY]<40 && sensorsData[HUMIDITY] > 60)){
       activateRed();
     } else {
       activateGreen();

@@ -2,6 +2,8 @@
 #include<input.h>
 #include <handler.h>
 
+String sensorsName[SENSORS_NUM] = {"Soil Moisture: ", "Gas: ", "Light Intensity: ", "Water Level: ", "Humidity: ", "Soil Moisture: "};
+
 int lcdColumns = 16;
 int lcdRows = 2;
 int currentLCDState=-1;
