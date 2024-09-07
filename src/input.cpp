@@ -138,9 +138,9 @@ void manualIrrigation(void* pvParameters){
   while(1){
     int button = digitalRead(PUSHBUTTON_PIN);
     if(button){
-      digitalWrite(RELAY_PIN, HIGH);
-    } else{
       digitalWrite(RELAY_PIN, LOW);
+    } else{
+      digitalWrite(RELAY_PIN, HIGH);
     }
     vTaskDelay(200 / portTICK_PERIOD_MS);
   }
