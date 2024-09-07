@@ -12,8 +12,8 @@
 #define TRIG_PIN 5
 #define ECHO_PIN 18
 #define RELAY_PIN 2
-#define GREEN_PIN 0
-#define RED_PIN 0
+#define GREEN_PIN 16
+#define RED_PIN 19
 
 #define SENSORS_NUM 6
 
