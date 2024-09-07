@@ -95,19 +95,11 @@ int readGas() {
 float lux=0.00,ADC_value=0.0048828125,LDR_value;
 int readLightIntensity() {
     int   ldrRawData;
-    float resistorVoltage, ldrVoltage;
-    float ldrResistance;
     float ldrLux;
 
     ldrRawData = analogRead(LIGHT_PIN);
-    resistorVoltage = (float)ldrRawData * (ADC_REF_VOLTAGE/MAX_ADC_READING)  ;
-    // voltage across the LDR is the 5V supply minus the 5k resistor voltage
-    ldrVoltage = ADC_REF_VOLTAGE - resistorVoltage;
-
-    ldrResistance = ldrVoltage / resistorVoltage * REF_RESISTANCE;
-    //ldrLux = LUX_CALC_SCALAR * pow(ldrResistance, LUX_CALC_EXPONENT);
-
-    return ldrResistance;
+    ldrLux=map(ldrRawData ,500,4095,10,10000);
+    return ldrLux;
 }
 
 float readWater() { // calculating distance using the ultrasonic sensor
@@ -183,6 +175,6 @@ void sensor_reading(void* pvParameters){
     //send the data to hive
     sendData();
     //wait 15 seconds for next readings
-    vTaskDelay(15000 / portTICK_PERIOD_MS);
+    vTaskDelay(5000 / portTICK_PERIOD_MS);
   }
 }
