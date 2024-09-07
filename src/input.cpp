@@ -4,13 +4,6 @@
 #include <hivemq.h>
 #include<actuators.h>
 
-
-#define MAX_ADC_READING           4095
-#define ADC_REF_VOLTAGE           3.3
-#define REF_RESISTANCE            10000     // measure this for best results
-#define LUX_CALC_SCALAR           12518931 // from experiment
-#define LUX_CALC_EXPONENT         -1.405   // from experiment
-
 #define ROWS  4
 #define COLS  4
 
@@ -166,7 +159,7 @@ void sensor_reading(void* pvParameters){
       sendSystemEvent(EVENT_ACTIVATE_PUMB);
     }
 
-    if((sensorsData[SOIL_MOISTURE] < 20 && sensorsData[SOIL_MOISTURE] > 60) || sensorsData[WATER]<30  || (sensorsData[TEMPERATURE] < 20 && sensorsData[TEMPERATURE] > 35) || (sensorsData[LIGHT]<1000 && sensorsData[LIGHT] > 10000) || (sensorsData[HUMIDITY]<40 && sensorsData[HUMIDITY] > 60)){
+    if((sensorsData[SOIL_MOISTURE] < 20 && sensorsData[SOIL_MOISTURE] > 60) || sensorsData[WATER]<30  || (sensorsData[TEMPERATURE] < 20 && sensorsData[TEMPERATURE] > 35) || (sensorsData[LIGHT]<3000) || (sensorsData[HUMIDITY]<40 && sensorsData[HUMIDITY] > 60)){
       activateRed();
     } else {
       activateGreen();
