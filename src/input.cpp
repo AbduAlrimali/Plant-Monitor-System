@@ -85,7 +85,6 @@ int readGas() {
     //return 100 - ((data / 4095.00) * 100); 
 }
 
-float lux=0.00,ADC_value=0.0048828125,LDR_value;
 int readLightIntensity() {
     int   ldrRawData;
     float ldrLux;
