@@ -6,8 +6,8 @@
 
 
 #define MAX_ADC_READING           4095
-#define ADC_REF_VOLTAGE           5.0
-#define REF_RESISTANCE            5030     // measure this for best results
+#define ADC_REF_VOLTAGE           3.3
+#define REF_RESISTANCE            10000    // measure this for best results
 #define LUX_CALC_SCALAR           12518931 // from experiment
 #define LUX_CALC_EXPONENT         -1.405   // from experiment
 
@@ -100,12 +100,10 @@ int readLightIntensity() {
     float ldrLux;
 
     ldrRawData = analogRead(LIGHT_PIN);
-    resistorVoltage = (float)ldrRawData / MAX_ADC_READING * ADC_REF_VOLTAGE;
-
+    resistorVoltage = (float)ldrRawData * (ADC_REF_VOLTAGE/MAX_ADC_READING)  ;
     // voltage across the LDR is the 5V supply minus the 5k resistor voltage
     ldrVoltage = ADC_REF_VOLTAGE - resistorVoltage;
-
-    ldrResistance = ldrVoltage / resistorVoltage * REF_RESISTANCE;
+    ldrResistance = REF_RESISTANCE*(ADC_REF_VOLTAGE/ldrVoltage-1);
     ldrLux = LUX_CALC_SCALAR * pow(ldrResistance, LUX_CALC_EXPONENT);
     return ldrLux ;
 }
