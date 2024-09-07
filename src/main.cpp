@@ -19,6 +19,7 @@ void setup() {
   pinMode(RELAY_PIN, OUTPUT);
   pinMode(GREEN_PIN, OUTPUT);
   pinMode(RED_PIN, OUTPUT);
+  pinMode(PUSHBUTTON_PIN, INPUT_PULLUP);
 
   //initialize the components
   input_setup();

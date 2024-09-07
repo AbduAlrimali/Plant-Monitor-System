@@ -14,6 +14,7 @@
 #define RELAY_PIN 2
 #define GREEN_PIN 16
 #define RED_PIN 19
+#define PUSHBUTTON_PIN 23
 
 #define SENSORS_NUM 6
 
@@ -34,4 +35,5 @@ float readWater();
 void sensor_reading(void* pvParameters);
 void input_setup();
 void handleKeypadEvent(void* pvParameters);
+void manualIrrigation(void* pvParameters);
 #endif

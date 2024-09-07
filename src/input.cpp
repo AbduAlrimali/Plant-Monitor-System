@@ -149,3 +149,15 @@ void sensor_reading(void* pvParameters){
     vTaskDelay(5000 / portTICK_PERIOD_MS);
   }
 }
+
+void manualIrrigation(void* pvParameters){
+  while(1){
+    int button = digitalRead(PUSHBUTTON_PIN);
+    if(button){
+      digitalWrite(RELAY_PIN, HIGH);
+    } else{
+      digitalWrite(RELAY_PIN, LOW);
+    }
+    vTaskDelay(200 / portTICK_PERIOD_MS);
+  }
+}

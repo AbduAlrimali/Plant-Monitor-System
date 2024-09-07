@@ -15,6 +15,7 @@ void handler_setup(){
     xTaskCreatePinnedToCore(&handleKeypadEvent, "Keypad", 4096, NULL, 1, NULL, 1); 
     xTaskCreatePinnedToCore(&displayLCD, "displayLCD", 4096, NULL, 1, NULL, 1);
     xTaskCreatePinnedToCore(&activatePumb, "activatePumb", 4096, NULL, 1, NULL, 1); 
+    xTaskCreatePinnedToCore(&manualIrrigation, "ManualMode", 4096, NULL, 1, NULL, 1); 
     xEventQueue = xQueueCreate(10, sizeof(SystemEvent_t));
     Serial.println("Handler is ready.");
 }
