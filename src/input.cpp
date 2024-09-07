@@ -89,6 +89,7 @@ float lux=0.00,ADC_value=0.0048828125,LDR_value;
 int readLightIntensity() {
     LDR_value = analogRead(LIGHT_PIN); // reading from light sensor
     lux = (250.000000/(ADC_value*LDR_value))-50.000000;
+    LDR_value = map(LDR_value, 0, 4095, 0, 10000);
     return LDR_value;
     //return 100 - ((data / 4095.00) * 100); 
 }
