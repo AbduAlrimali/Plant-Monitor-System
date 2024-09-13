@@ -5,6 +5,7 @@
 #define COLS  4
 
 double sensorsData[SENSORS_NUM];
+String sensorsName[SENSORS_NUM] = {"Soil Moisture", "Gas", "Light Intensity", "Water Level", "Humidity", "Temperature"};
 
 uint8_t rowPins[ROWS] = {13, 12, 14, 27}; 
 uint8_t colPins[COLS] = {26, 25, 33, 4}; 

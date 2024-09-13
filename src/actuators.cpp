@@ -2,7 +2,7 @@
 #include<input.h>
 #include <handler.h>
 
-String sensorsName[SENSORS_NUM] = {"Soil Moisture: ", "Gas: ", "Light Intensity: ", "Water Level: ", "Humidity: ", "Temperature: "};
+
 
 int lcdColumns = 16;
 int lcdRows = 2;
@@ -29,7 +29,7 @@ void displayLCD(void* pvParameters){
             lcd.setCursor(0, 0);
         } else {
             formattedData = String(sensorsData[currentLCDState], 2);
-            lcd.print(sensorsName[currentLCDState]);
+            lcd.print(sensorsName[currentLCDState]+": ");
             lcd.setCursor(0, 1);
             lcd.print(formattedData);
             lcd.setCursor(0, 0);
