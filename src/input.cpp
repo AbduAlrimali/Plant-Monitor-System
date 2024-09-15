@@ -57,7 +57,7 @@ float readHumidity() { //reading from DHT11
 int readSoilMoisture() { //reading from soil moisture sensor
     int data= analogRead(SOIL_PIN);
     int w=4095-data;
-    return map(w,0,4095,0,100);
+    return min(map(w,0,4095,0,120), 100l);
 }
 
 int readGas() {
@@ -87,7 +87,7 @@ float readWater() { // calculating distance using the ultrasonic sensor
 }
 
 void printData(){
-  Serial.print("Temperature: ");
+  Serial.print("Temprature: ");
   Serial.println(sensorsData[SENSOR_TEMPERATURE]);
   Serial.print("Humidity: ");
   Serial.println(sensorsData[SENSOR_HUMIDITY]);
@@ -120,7 +120,7 @@ void sensor_reading(void* pvParameters){
     printData();
 
   //take action upon sensor readings
-    if(sensorsData[SENSOR_SOIL_MOISTURE] < 20) {
+    if(sensorsData[0] < 20) {
       sendSystemEvent(EVENT_ACTIVATE_PUMB);
     }
 

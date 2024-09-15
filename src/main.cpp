@@ -38,6 +38,7 @@ void setup() {
   pinMode(GREEN_PIN, OUTPUT);
   pinMode(RED_PIN, OUTPUT);
   pinMode(PUSHBUTTON_PIN, INPUT_PULLDOWN);
+  pinMode(BUZZER_PIN, OUTPUT);
 
   //initialize the components
   input_setup();

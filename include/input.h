@@ -15,6 +15,7 @@
 #define GREEN_PIN 16
 #define RED_PIN 19
 #define PUSHBUTTON_PIN 23
+#define BUZZER_PIN 4
 
 #define SENSORS_NUM 6
 

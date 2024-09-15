@@ -14,8 +14,9 @@ void handler_setup(){
     xTaskCreatePinnedToCore(&wifiMonitoringTask, "WiFi Monitor", 4096, NULL, 1, NULL, 0); //monitor wifi status and take action
     xTaskCreatePinnedToCore(&handleKeypadEvent, "Keypad", 4096, NULL, 1, NULL, 1); 
     xTaskCreatePinnedToCore(&displayLCD, "displayLCD", 4096, NULL, 1, NULL, 1);
-    xTaskCreatePinnedToCore(&activatePumb, "activatePumb", 4096, NULL, 1, NULL, 1); 
-    xTaskCreatePinnedToCore(&manualIrrigation, "ManualMode", 4096, NULL, 1, NULL, 1); 
+    xTaskCreatePinnedToCore(&activatePumb, "activatePumb", 2048, NULL, 1, NULL, 1); 
+    xTaskCreatePinnedToCore(&manualIrrigation, "ManualMode", 2048, NULL, 1, NULL, 1);
+    xTaskCreatePinnedToCore(&notify, "Notify", 2048, NULL, 1, NULL, 1);
     xEventQueue = xQueueCreate(10, sizeof(SystemEvent_t));
     Serial.println("Handler is ready.");
 }
@@ -63,10 +64,10 @@ void eventHandlerTask(void* pvParameters){
                     currentLCDState=SENSOR_SOIL_MOISTURE;
                     break;
                 case EVENT_WARNING:
-                    activateRed();
+                    currentWarnState = WARNING;
                     break;
                 case EVENT_NORMAL:
-                    activateGreen();
+                    currentWarnState = NORMAL;
                     break;
                 default:
                     Serial.println("Unusual event occurred!");

@@ -36,13 +36,13 @@ void displayLCD(void* pvParameters){
     }
 }
 unsigned long previousMillis;
-// activate the pumb when event is received 
+// activate the pump when event is received 
 void activatePumb(void* pvParameters){
     while(1){
         switch (currentPumpState) {
             case PUMP_ON:
-                if(sensorsData[SENSOR_SOIL_MOISTURE]<=75){
-                    Serial.println("Pumb Activated");
+                if(sensorsData[SENSOR_SOIL_MOISTURE]<=60){
+                    Serial.println("Pump Activated");
                     digitalWrite(RELAY_PIN, HIGH);
                     currentPumpState = PUMP_WAITING; // Move to the next state
                     previousMillis = millis(); // Record the time
@@ -54,7 +54,7 @@ void activatePumb(void* pvParameters){
             case PUMP_WAITING:
                 if (millis() - previousMillis >= 15000) {
                     digitalWrite(RELAY_PIN, LOW);
-                    Serial.println("Pumb Deactivated");
+                    Serial.println("Pump Deactivated");
                     currentPumpState = PUMP_OFF;
                 }
                 break;
@@ -64,11 +64,21 @@ void activatePumb(void* pvParameters){
     }
 }
 
-void activateRed(){
-    digitalWrite(GREEN_PIN, LOW);
-    digitalWrite(RED_PIN, HIGH);
-}
-void activateGreen(){
-    digitalWrite(RED_PIN, LOW);
-    digitalWrite(GREEN_PIN, HIGH);
+WarnState currentWarnState = NORMAL;
+void notify(void* pvParameters){
+    while(1){
+        if(currentWarnState==WARNING){
+            digitalWrite(GREEN_PIN, LOW);
+            digitalWrite(RED_PIN, HIGH);
+            digitalWrite(BUZZER_PIN, HIGH);
+            vTaskDelay(1000 / portTICK_PERIOD_MS);
+            digitalWrite(RED_PIN, LOW);
+            digitalWrite(BUZZER_PIN, LOW);
+            vTaskDelay(1000 / portTICK_PERIOD_MS);
+        } else {
+            digitalWrite(RED_PIN, LOW);
+            digitalWrite(GREEN_PIN, HIGH);
+        }
+        vTaskDelay(200 / portTICK_PERIOD_MS);
+    }
 }
