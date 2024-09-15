@@ -69,7 +69,7 @@ void eventHandlerTask(void* pvParameters){
                     activateGreen();
                     break;
                 default:
-                    Serial.println("Unusual event occured!");
+                    Serial.println("Unusual event occurred!");
                     break;
             }
         }

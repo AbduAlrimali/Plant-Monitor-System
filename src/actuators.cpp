@@ -2,8 +2,6 @@
 #include<input.h>
 #include <handler.h>
 
-
-
 int lcdColumns = 16;
 int lcdRows = 2;
 int currentLCDState=-1;
@@ -31,7 +29,7 @@ void displayLCD(void* pvParameters){
             formattedData = String(sensorsData[currentLCDState], 2);
             lcd.print(sensorsName[currentLCDState]+": ");
             lcd.setCursor(0, 1);
-            lcd.print(formattedData);
+            lcd.print(formattedData + " " + unit[currentLCDState]);
             lcd.setCursor(0, 0);
         }
         vTaskDelay(200 / portTICK_PERIOD_MS);
@@ -43,10 +41,15 @@ void activatePumb(void* pvParameters){
     while(1){
         switch (currentPumpState) {
             case PUMP_ON:
-                Serial.println("Pumb Activated");
-                digitalWrite(RELAY_PIN, HIGH);
-                currentPumpState = PUMP_WAITING; // Move to the next state
-                previousMillis = millis(); // Record the time
+                if(sensorsData[SENSOR_SOIL_MOISTURE]<=75){
+                    Serial.println("Pumb Activated");
+                    digitalWrite(RELAY_PIN, HIGH);
+                    currentPumpState = PUMP_WAITING; // Move to the next state
+                    previousMillis = millis(); // Record the time
+                } else {
+                    Serial.println("Plant is watered");
+                    currentPumpState = PUMP_OFF;
+                }
                 break;
             case PUMP_WAITING:
                 if (millis() - previousMillis >= 15000) {
@@ -55,7 +58,7 @@ void activatePumb(void* pvParameters){
                     currentPumpState = PUMP_OFF;
                 }
                 break;
-                
+
         }
         vTaskDelay(200 / portTICK_PERIOD_MS);
     }

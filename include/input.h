@@ -7,8 +7,8 @@
 // Sensor pin definitions
 #define DHT_PIN 15
 #define SOIL_PIN 34
-#define GAS_PIN 32
-#define LIGHT_PIN 35
+#define GAS_PIN 35
+#define LIGHT_PIN 39
 #define TRIG_PIN 5
 #define ECHO_PIN 18
 #define RELAY_PIN 2
@@ -18,10 +18,9 @@
 
 #define SENSORS_NUM 6
 
-extern uint8_t rowPins[];
-extern uint8_t colPins[];
 extern double sensorsData[];
 extern String sensorsName[];
+extern String unit[];
 
 enum sensors { SENSOR_SOIL_MOISTURE=0, SENSOR_GAS, SENSOR_LIGHT, SENSOR_WATER, SENSOR_HUMIDITY, SENSOR_TEMPERATURE };
 

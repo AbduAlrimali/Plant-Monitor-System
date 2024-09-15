@@ -1,14 +1,16 @@
 #include "input.h"
 #include<handler.h>
+#include<actuators.h>
 
 #define ROWS  4
 #define COLS  4
 
 double sensorsData[SENSORS_NUM];
 String sensorsName[SENSORS_NUM] = {"Soil Moisture", "Gas", "Light Intensity", "Water Level", "Humidity", "Temperature"};
+String unit[SENSORS_NUM] = {"%", "ppm", "lux", "%", "%", "°C"};
 
 uint8_t rowPins[ROWS] = {13, 12, 14, 27}; 
-uint8_t colPins[COLS] = {26, 25, 33, 4}; 
+uint8_t colPins[COLS] = {26, 25, 33, 32}; 
 
 char keyMap[ROWS][COLS] = {
   {'1','2','3', 'A'},
@@ -55,7 +57,7 @@ float readHumidity() { //reading from DHT11
 int readSoilMoisture() { //reading from soil moisture sensor
     int data= analogRead(SOIL_PIN);
     int w=4095-data;
-    return min(map(w,0,4095,0,170), 100l);
+    return map(w,0,4095,0,100);
 }
 
 int readGas() {
@@ -69,7 +71,7 @@ int readLightIntensity() {
     float ldrLux;
 
     ldrRawData = analogRead(LIGHT_PIN);
-    ldrLux=map(ldrRawData ,500,4095,10,10000);
+    ldrLux=map(ldrRawData ,0,4095,10,10000);
     return ldrLux;
 }
 
@@ -85,7 +87,7 @@ float readWater() { // calculating distance using the ultrasonic sensor
 }
 
 void printData(){
-  Serial.print("Temprature: ");
+  Serial.print("Temperature: ");
   Serial.println(sensorsData[SENSOR_TEMPERATURE]);
   Serial.print("Humidity: ");
   Serial.println(sensorsData[SENSOR_HUMIDITY]);
@@ -118,7 +120,7 @@ void sensor_reading(void* pvParameters){
     printData();
 
   //take action upon sensor readings
-    if(sensorsData[0] < 20) {
+    if(sensorsData[SENSOR_SOIL_MOISTURE] < 20) {
       sendSystemEvent(EVENT_ACTIVATE_PUMB);
     }
 
@@ -137,11 +139,13 @@ void sensor_reading(void* pvParameters){
 
 void manualIrrigation(void* pvParameters){
   while(1){
-    int button = digitalRead(PUSHBUTTON_PIN);
-    if(button){
-      digitalWrite(RELAY_PIN, LOW);
-    } else{
-      digitalWrite(RELAY_PIN, HIGH);
+    if(currentPumpState == PUMP_OFF){
+      int button = digitalRead(PUSHBUTTON_PIN);
+      if(button){
+        digitalWrite(RELAY_PIN, HIGH);
+      } else{
+        digitalWrite(RELAY_PIN, LOW);
+      }
     }
     vTaskDelay(200 / portTICK_PERIOD_MS);
   }

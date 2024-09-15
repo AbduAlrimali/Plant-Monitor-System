@@ -42,7 +42,7 @@ void setup() {
   //initialize the components
   input_setup();
   lcd_setup();
-  start_wifimanager();
+  start_wifi();
   hivemq_setup();
   handler_setup();
 }

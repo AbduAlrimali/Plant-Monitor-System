@@ -68,7 +68,7 @@ void IRAM_ATTR callback(char* topic, byte* payload, unsigned int length) {
         x_message.payload[i] = ((char)payload[i]);
     }
     x_message.payload[i] = '\0';
-    //convert the recieved message to system event datatype and send it to the queue
+    //convert the received message to system event datatype and send it to the queue
   SystemEvent_t payload_new = (SystemEvent_t)(atoi(x_message.payload));
     if(sendSystemEvent(payload_new)){
         Serial.println("Event received successfully from HiveMQ.");
@@ -111,7 +111,7 @@ void hivemq_setup()
     Serial.println("Connected to HiveMQ successfully.");
 }
 
-//keeping the connection to publish and reveive
+//keeping the connection to publish and revive
 void keeping_connection(void* pvParameters) {
     while(1){
         if (!client.connected()) {
@@ -125,6 +125,6 @@ void keeping_connection(void* pvParameters) {
 void send_hive(const char *obj)
 {
     if (client.publish(topic_publish, obj)) {
-        Serial.println("Messege sent successfully.");
+        Serial.println("Message sent successfully.");
     }
 }
