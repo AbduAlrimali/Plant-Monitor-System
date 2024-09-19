@@ -4,8 +4,13 @@
 
 int lcdColumns = 16;
 int lcdRows = 2;
-int currentLCDState=-1;
-PumpState currentPumpState = PUMP_OFF;
+
+PumpState currentPumpState=PUMP_OFF;
+LCDState currentLCDState=SHOW_WELCOME;
+WarnState currentWarnState = NORMAL;
+sensorState currentLCDSensor;
+
+String errorsLCD[SENSORS_NUM] = {"Humidity", "Gas", "Light", "Soil Moisture", "Temperature", "Water Level"};
 
 LiquidCrystal_I2C lcd(0x27, lcdColumns, lcdRows);
 void lcd_setup(){
@@ -20,29 +25,40 @@ void displayLCD(void* pvParameters){
     while(1){
         lcd.setCursor(0, 0);
         lcd.clear();
-        if(currentLCDState==-1) {
+        if(currentLCDState==SHOW_WELCOME) {
             lcd.print("Welcome to Smart");
             lcd.setCursor(0, 1);
             lcd.print("PLant.");
             lcd.setCursor(0, 0);
-        } else {
-            formattedData = String(sensorsData[currentLCDState], 2);
-            lcd.print(sensorsName[currentLCDState]+": ");
+        }
+        else if (currentLCDState==SHOW_ERRORS){
+            if(currentWarnState == NORMAL){
+                lcd.print("All is fine.");
+            } else {
+                lcd.print(errorsLCD[currentWarnState]+" is");
+                lcd.setCursor(0, 1);
+                lcd.print("out of range.");
+                lcd.setCursor(0, 0);
+            } 
+        }
+         else if(currentLCDState==SHOW_SENSORS) {
+            formattedData = String(sensorsData[currentLCDSensor], 2);
+            lcd.print(sensorsName[currentLCDSensor]+": ");
             lcd.setCursor(0, 1);
-            lcd.print(formattedData + " " + unit[currentLCDState]);
+            lcd.print(formattedData + " " + unit[currentLCDSensor]);
             lcd.setCursor(0, 0);
         }
         vTaskDelay(200 / portTICK_PERIOD_MS);
     }
 }
 unsigned long previousMillis;
-// activate the pump when event is received 
+// activate the pumb when event is received 
 void activatePumb(void* pvParameters){
     while(1){
         switch (currentPumpState) {
             case PUMP_ON:
-                if(sensorsData[SENSOR_SOIL_MOISTURE]<=60){
-                    Serial.println("Pump Activated");
+                if(sensorsData[SENSOR_SOIL_MOISTURE]<=75){
+                    Serial.println("Pumb Activated");
                     digitalWrite(RELAY_PIN, HIGH);
                     currentPumpState = PUMP_WAITING; // Move to the next state
                     previousMillis = millis(); // Record the time
@@ -52,9 +68,9 @@ void activatePumb(void* pvParameters){
                 }
                 break;
             case PUMP_WAITING:
-                if (millis() - previousMillis >= 15000) {
+                if (millis() - previousMillis >= 4000) {
                     digitalWrite(RELAY_PIN, LOW);
-                    Serial.println("Pump Deactivated");
+                    Serial.println("Pumb Deactivated");
                     currentPumpState = PUMP_OFF;
                 }
                 break;
@@ -64,10 +80,10 @@ void activatePumb(void* pvParameters){
     }
 }
 
-WarnState currentWarnState = NORMAL;
+
 void notify(void* pvParameters){
     while(1){
-        if(currentWarnState==WARNING){
+        if(currentWarnState!=NORMAL){
             digitalWrite(GREEN_PIN, LOW);
             digitalWrite(RED_PIN, HIGH);
             digitalWrite(BUZZER_PIN, HIGH);

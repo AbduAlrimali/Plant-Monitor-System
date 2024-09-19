@@ -7,7 +7,7 @@
 
 double sensorsData[SENSORS_NUM];
 String sensorsName[SENSORS_NUM] = {"Soil Moisture", "Gas", "Light Intensity", "Water Level", "Humidity", "Temperature"};
-String unit[SENSORS_NUM] = {"%", "ppm", "lux", "%", "%", "°C"};
+String unit[SENSORS_NUM] = {"%", "ppm", "lux", "%", "%", "'C"};
 
 uint8_t rowPins[ROWS] = {13, 12, 14, 27}; 
 uint8_t colPins[COLS] = {26, 25, 33, 32}; 
@@ -57,7 +57,7 @@ float readHumidity() { //reading from DHT11
 int readSoilMoisture() { //reading from soil moisture sensor
     int data= analogRead(SOIL_PIN);
     int w=4095-data;
-    return min(map(w,0,4095,0,120), 100l);
+    return map(w,0,4095,0,100);
 }
 
 int readGas() {
@@ -82,8 +82,11 @@ float readWater() { // calculating distance using the ultrasonic sensor
     delayMicroseconds(10);
     digitalWrite(TRIG_PIN, LOW);
     int duration = pulseIn(ECHO_PIN, HIGH);
-    double distance = (duration * 0.034) / 2; //full = 2, empty = 10
-    return max(((8-distance)/8)*100, 0.0);
+    double distance = (duration * 0.034) / 2; //full = 5, empty = 14
+    distance -= 5;
+    return min(max(((9-distance)/9.0)*100, 0.0), 100.0);
+    //return distance;
+    //return max(((8-distance)/8)*100, 0.0);
 }
 
 void printData(){
@@ -120,12 +123,22 @@ void sensor_reading(void* pvParameters){
     printData();
 
   //take action upon sensor readings
-    if(sensorsData[0] < 20) {
+    if(sensorsData[0] < 40) {
       sendSystemEvent(EVENT_ACTIVATE_PUMB);
     }
 
-    if((sensorsData[SENSOR_SOIL_MOISTURE] < 40 && sensorsData[SENSOR_SOIL_MOISTURE] > 80) || sensorsData[SENSOR_WATER] <= 20  || (sensorsData[SENSOR_TEMPERATURE] < 25 && sensorsData[SENSOR_TEMPERATURE] > 35) || (sensorsData[SENSOR_LIGHT] < 3000) || (sensorsData[SENSOR_HUMIDITY] < 40 && sensorsData[SENSOR_HUMIDITY] > 80)){
-      sendSystemEvent(EVENT_WARNING);
+    if(sensorsData[SENSOR_SOIL_MOISTURE] < 40 && sensorsData[SENSOR_SOIL_MOISTURE] > 80){
+      sendSystemEvent(EVENT_WARNING_SOIL_MOISTURE);
+    } else if(sensorsData[SENSOR_WATER] <= 20){
+      sendSystemEvent(EVENT_WARNING_WATER_LEVEL);
+    } else if(sensorsData[SENSOR_TEMPERATURE] < 25 && sensorsData[SENSOR_TEMPERATURE] > 35){
+      sendSystemEvent(EVENT_WARNING_TEMPERATURE);
+    } else if(sensorsData[SENSOR_LIGHT] < 3000){
+      sendSystemEvent(EVENT_WARNING_LIGHT);
+    } else if(sensorsData[SENSOR_HUMIDITY] < 40 && sensorsData[SENSOR_HUMIDITY] > 80){
+      sendSystemEvent(EVENT_WARNING_HUMIDITY);
+    }else if(sensorsData[SENSOR_GAS] > 300) {
+      sendSystemEvent(EVENT_WARNING_GAS);            //this was added by shehab
     } else {
       sendSystemEvent(EVENT_NORMAL);
     }

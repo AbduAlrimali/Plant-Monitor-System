@@ -11,8 +11,7 @@ void handler_setup(){
     xTaskCreatePinnedToCore(&sensor_reading, "ReadingSensors", 4096, NULL, 1, NULL, 0); //sensor reading task
     xTaskCreatePinnedToCore(&eventHandlerTask, "EventHandler", 8192, NULL, 1, NULL, 0); //a task to handle incoming events from mqtt
     xTaskCreatePinnedToCore(&keeping_connection, "MQTTKeeper", 8192, NULL, 1, NULL, 0); // keep mqtt connection
-    xTaskCreatePinnedToCore(&wifiMonitoringTask, "WiFi Monitor", 4096, NULL, 1, NULL, 0); //monitor wifi status and take action
-    xTaskCreatePinnedToCore(&handleKeypadEvent, "Keypad", 4096, NULL, 1, NULL, 1); 
+    xTaskCreatePinnedToCore(&handleKeypadEvent, "Keypad", 4096, NULL, 1, NULL, 0); 
     xTaskCreatePinnedToCore(&displayLCD, "displayLCD", 4096, NULL, 1, NULL, 1);
     xTaskCreatePinnedToCore(&activatePumb, "activatePumb", 2048, NULL, 1, NULL, 1); 
     xTaskCreatePinnedToCore(&manualIrrigation, "ManualMode", 2048, NULL, 1, NULL, 1);
@@ -45,32 +44,65 @@ void eventHandlerTask(void* pvParameters){
                 case EVENT_DATA_READY_FOR_HIVE_MQ:
                     sendData();
                     break;
-                case LCD_SHOW_WATER:
-                    currentLCDState=SENSOR_WATER;
+
+                // LCD Sensors
+                case EVENT_LCD_SHOW_WATER:
+                    currentLCDState=SHOW_SENSORS;
+                    currentLCDSensor = LCD_SHOW_WATER_LEVEL;
                     break;
-                case LCD_SHOW_GAS:
-                    currentLCDState=SENSOR_GAS;
+                case EVENT_LCD_SHOW_GAS:
+                    currentLCDState=SHOW_SENSORS;
+                    currentLCDSensor = LCD_SHOW_GAS;
                     break;
-                case LCD_SHOW_HUMIDETY:
-                    currentLCDState=SENSOR_HUMIDITY;
+                case EVENT_LCD_SHOW_HUMIDETY:
+                    currentLCDState=SHOW_SENSORS;
+                    currentLCDSensor = LCD_SHOW_HUMIDETY;
                     break;
-                case LCD_SHOW_TEMPRATURE:
-                    currentLCDState=SENSOR_TEMPERATURE;
+                case EVENT_LCD_SHOW_TEMPRATURE:
+                    currentLCDState=SHOW_SENSORS;
+                    currentLCDSensor = LCD_SHOW_TEMPERATURE;
                     break;
-                case LCD_SHOW_LIGHT:
-                    currentLCDState=SENSOR_LIGHT;
+                case EVENT_LCD_SHOW_LIGHT:
+                    currentLCDState=SHOW_SENSORS;
+                    currentLCDSensor = LCD_SHOW_LIGHT;
                     break;
-                case LCD_SHOW_MOISTURE:
-                    currentLCDState=SENSOR_SOIL_MOISTURE;
+                case EVENT_LCD_SHOW_MOISTURE:
+                    currentLCDState=SHOW_SENSORS;
+                    currentLCDSensor = LCD_SHOW_SOIL_MOISTURE;
                     break;
-                case EVENT_WARNING:
-                    currentWarnState = WARNING;
+                
+                // Navigare LCD States
+                case EVENT_LCD_SHOW_WELCOME:
+                    currentLCDState=SHOW_WELCOME;
+                    break;
+                case EVENT_LCD_SHOW_ERROR:
+                    currentLCDState=SHOW_ERRORS;
+                    break;
+
+                //LCD_Warning
+                case EVENT_WARNING_HUMIDITY:
+                    currentWarnState = WARNING_HUMIDITY;
+                    break;
+                case EVENT_WARNING_LIGHT:
+                    currentWarnState = WARNING_LIGHT;
+                    break;
+                case EVENT_WARNING_SOIL_MOISTURE:
+                    currentWarnState = WARNING_SOIL_MOISTURE;
+                    break;
+                case EVENT_WARNING_TEMPERATURE:
+                    currentWarnState = WARNING_TEMPERATURE;
+                    break;
+                case EVENT_WARNING_WATER_LEVEL:
+                    currentWarnState = WARNING_WATER_LEVEL;
+                    break;
+                case EVENT_WARNING_GAS:
+                    currentWarnState = WARNING_GAS;
                     break;
                 case EVENT_NORMAL:
                     currentWarnState = NORMAL;
                     break;
                 default:
-                    Serial.println("Unusual event occurred!");
+                    Serial.println("Unusual event occured!");
                     break;
             }
         }
