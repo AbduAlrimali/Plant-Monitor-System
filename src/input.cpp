@@ -85,8 +85,6 @@ float readWater() { // calculating distance using the ultrasonic sensor
     double distance = (duration * 0.034) / 2; //full = 5, empty = 14
     distance -= 5;
     return min(max(((9-distance)/9.0)*100, 0.0), 100.0);
-    //return distance;
-    //return max(((8-distance)/8)*100, 0.0);
 }
 
 void printData(){
@@ -103,11 +101,6 @@ void printData(){
   Serial.print("Water level: ");
   Serial.println(sensorsData[SENSOR_WATER]);
 }
-
-
-// green - good
-// red - something wrong
-// buzzer - no water
 
 void sensor_reading(void* pvParameters){
   while(1) {
@@ -127,18 +120,18 @@ void sensor_reading(void* pvParameters){
       sendSystemEvent(EVENT_ACTIVATE_PUMB);
     }
 
-    if(sensorsData[SENSOR_SOIL_MOISTURE] < 40 && sensorsData[SENSOR_SOIL_MOISTURE] > 80){
+    if(sensorsData[SENSOR_SOIL_MOISTURE] < 40 || sensorsData[SENSOR_SOIL_MOISTURE] > 80){
       sendSystemEvent(EVENT_WARNING_SOIL_MOISTURE);
     } else if(sensorsData[SENSOR_WATER] <= 20){
       sendSystemEvent(EVENT_WARNING_WATER_LEVEL);
-    } else if(sensorsData[SENSOR_TEMPERATURE] < 25 && sensorsData[SENSOR_TEMPERATURE] > 35){
+    } else if(sensorsData[SENSOR_TEMPERATURE] < 25 || sensorsData[SENSOR_TEMPERATURE] > 35){
       sendSystemEvent(EVENT_WARNING_TEMPERATURE);
     } else if(sensorsData[SENSOR_LIGHT] < 3000){
       sendSystemEvent(EVENT_WARNING_LIGHT);
-    } else if(sensorsData[SENSOR_HUMIDITY] < 40 && sensorsData[SENSOR_HUMIDITY] > 80){
+    } else if(sensorsData[SENSOR_HUMIDITY] < 40 || sensorsData[SENSOR_HUMIDITY] > 80){
       sendSystemEvent(EVENT_WARNING_HUMIDITY);
     }else if(sensorsData[SENSOR_GAS] > 300) {
-      sendSystemEvent(EVENT_WARNING_GAS);            //this was added by shehab
+      sendSystemEvent(EVENT_WARNING_GAS);  
     } else {
       sendSystemEvent(EVENT_NORMAL);
     }
